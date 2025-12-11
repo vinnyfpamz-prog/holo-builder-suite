@@ -1,36 +1,52 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "Sobre", path: "/sobre" },
-  { name: "Serviços", path: "/servicos" },
-  { name: "Portfólio", path: "/portfolio" },
-  { name: "Depoimentos", path: "/depoimentos" },
-  { name: "Blog", path: "/blog" },
-  { name: "Contato", path: "/contato" },
+  { name: "Home", href: "#home" },
+  { name: "Sobre", href: "#sobre" },
+  { name: "Serviços", href: "#servicos" },
+  { name: "Portfólio", href: "#portfolio" },
+  { name: "Depoimentos", href: "#depoimentos" },
+  { name: "Contato", href: "#contato" },
 ];
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
+  const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
+
+      // Detect active section
+      const sections = navLinks.map((link) => link.href.replace("#", ""));
+      for (const section of sections.reverse()) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 150) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
     };
+    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
+  const scrollToSection = (href: string) => {
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
     setIsOpen(false);
-  }, [location.pathname]);
+  };
 
   return (
     <motion.header
@@ -46,7 +62,7 @@ export const Navbar = () => {
       <nav className="container mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="relative z-10">
+          <button onClick={() => scrollToSection("#home")} className="relative z-10">
             <motion.img
               src={logo}
               alt="Vinny Artz"
@@ -54,22 +70,22 @@ export const Navbar = () => {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             />
-          </Link>
+          </button>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
+              <button
+                key={link.href}
+                onClick={() => scrollToSection(link.href)}
                 className={`relative px-4 py-2 font-display text-sm uppercase tracking-wider transition-colors duration-300 ${
-                  location.pathname === link.path
+                  activeSection === link.href.replace("#", "")
                     ? "text-primary"
                     : "text-foreground/70 hover:text-foreground"
                 }`}
               >
                 {link.name}
-                {location.pathname === link.path && (
+                {activeSection === link.href.replace("#", "") && (
                   <motion.span
                     layoutId="navbar-indicator"
                     className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
@@ -78,7 +94,7 @@ export const Navbar = () => {
                     }}
                   />
                 )}
-              </Link>
+              </button>
             ))}
           </div>
 
@@ -121,21 +137,21 @@ export const Navbar = () => {
               <div className="flex flex-col gap-4">
                 {navLinks.map((link, index) => (
                   <motion.div
-                    key={link.path}
+                    key={link.href}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
                   >
-                    <Link
-                      to={link.path}
-                      className={`block py-2 font-display text-lg uppercase tracking-wider transition-colors ${
-                        location.pathname === link.path
+                    <button
+                      onClick={() => scrollToSection(link.href)}
+                      className={`block py-2 font-display text-lg uppercase tracking-wider transition-colors w-full text-left ${
+                        activeSection === link.href.replace("#", "")
                           ? "text-primary neon-text"
                           : "text-foreground/70"
                       }`}
                     >
                       {link.name}
-                    </Link>
+                    </button>
                   </motion.div>
                 ))}
                 <motion.div
