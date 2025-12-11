@@ -1,27 +1,32 @@
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Instagram, MessageCircle, Mail, MapPin } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 const quickLinks = [
-  { name: "Home", path: "/" },
-  { name: "Sobre", path: "/sobre" },
-  { name: "Serviços", path: "/servicos" },
-  { name: "Portfólio", path: "/portfolio" },
-  { name: "Depoimentos", path: "/depoimentos" },
-  { name: "Blog", path: "/blog" },
-  { name: "Contato", path: "/contato" },
+  { name: "Home", href: "#home" },
+  { name: "Sobre", href: "#sobre" },
+  { name: "Serviços", href: "#servicos" },
+  { name: "Portfólio", href: "#portfolio" },
+  { name: "Depoimentos", href: "#depoimentos" },
+  { name: "Contato", href: "#contato" },
 ];
 
 const services = [
   "Design Digital",
   "Impressos",
-  "Vídeo e Motion",
+  "Edição de Vídeo",
   "Web e Landing Pages",
   "Soluções Digitais",
 ];
 
 export const Footer = () => {
+  const scrollToSection = (href: string) => {
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <footer className="relative bg-secondary/30 border-t border-border overflow-hidden">
       {/* Glow effect */}
@@ -36,9 +41,9 @@ export const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <Link to="/">
+            <button onClick={() => scrollToSection("#home")}>
               <img src={logo} alt="Vinny Artz" className="h-12 w-auto mb-6" />
-            </Link>
+            </button>
             <p className="text-muted-foreground leading-relaxed mb-6">
               Transformando ideias em experiências visuais impactantes. Design gráfico, 
               vídeos, web e muito mais.
@@ -75,13 +80,13 @@ export const Footer = () => {
             </h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
-                <li key={link.path}>
-                  <Link
-                    to={link.path}
+                <li key={link.href}>
+                  <button
+                    onClick={() => scrollToSection(link.href)}
                     className="text-muted-foreground hover:text-primary transition-colors duration-300 link-underline"
                   >
                     {link.name}
-                  </Link>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -100,12 +105,12 @@ export const Footer = () => {
             <ul className="space-y-3">
               {services.map((service) => (
                 <li key={service}>
-                  <Link
-                    to="/servicos"
+                  <button
+                    onClick={() => scrollToSection("#servicos")}
                     className="text-muted-foreground hover:text-primary transition-colors duration-300 link-underline"
                   >
                     {service}
-                  </Link>
+                  </button>
                 </li>
               ))}
             </ul>
