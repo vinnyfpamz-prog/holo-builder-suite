@@ -447,13 +447,13 @@ const Index = () => {
   };
   return <>
       {/* ========== HERO SECTION ========== */}
-      <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 px-4">
         <div className="absolute inset-0" style={{
         background: "radial-gradient(ellipse at 50% 0%, hsl(24 95% 53% / 0.1) 0%, transparent 50%)"
       }} />
         
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-full">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <motion.div initial={{
             opacity: 0,
             x: -50
@@ -462,7 +462,7 @@ const Index = () => {
             x: 0
           }} transition={{
             duration: 0.8
-          }} className="text-center lg:text-left">
+          }} className="text-center lg:text-left order-2 lg:order-1">
               <motion.div initial={{
               opacity: 0,
               y: 20
@@ -471,9 +471,9 @@ const Index = () => {
               y: 0
             }} transition={{
               delay: 0.2
-            }} className="flex items-center justify-center lg:justify-start gap-2 mb-6">
-                <img src={logo} alt="Vinny Artz" className="h-10" />
-                <span className="px-3 py-1 text-xs font-display uppercase tracking-wider text-primary border border-primary/30 rounded-full bg-primary/5">
+            }} className="flex items-center justify-center lg:justify-start gap-2 mb-4 sm:mb-6 flex-wrap">
+                <img src={logo} alt="Vinny Artz" className="h-8 sm:h-10" />
+                <span className="px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-display uppercase tracking-wider text-primary border border-primary/30 rounded-full bg-primary/5 whitespace-nowrap">
                   Designer Gráfico
                 </span>
               </motion.div>
@@ -486,7 +486,7 @@ const Index = () => {
               y: 0
             }} transition={{
               delay: 0.3
-            }} className="font-display text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6">
+            }} className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 sm:mb-6">
                 <span className="text-foreground">Vinny</span>{" "}
                 <span className="text-gradient animate-glow-text">Artz</span>
               </motion.h1>
@@ -499,7 +499,7 @@ const Index = () => {
               y: 0
             }} transition={{
               delay: 0.4
-            }} className="text-lg md:text-xl text-muted-foreground mb-4">
+            }} className="text-base sm:text-lg md:text-xl text-muted-foreground mb-3 sm:mb-4">
                 Designer Gráfico e Criativo Multimídia
               </motion.p>
 
@@ -511,7 +511,7 @@ const Index = () => {
               y: 0
             }} transition={{
               delay: 0.5
-            }} className="text-muted-foreground mb-8 max-w-lg mx-auto lg:mx-0">
+            }} className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-lg mx-auto lg:mx-0 px-2 sm:px-0">
                 Transformo ideias em experiências visuais impactantes. 
                 Artes digitais, vídeos, impressos, web e tecnologia visual 
                 para elevar sua marca ao próximo nível.
@@ -525,17 +525,17 @@ const Index = () => {
               y: 0
             }} transition={{
               delay: 0.6
-            }} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button variant="hero" size="lg" asChild>
+            }} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-2 sm:px-0">
+                <Button variant="hero" size="lg" asChild className="w-full sm:w-auto text-sm sm:text-base">
                   <a href="https://wa.me/5594991022124" target="_blank" rel="noopener noreferrer">
-                    <Sparkles className="w-5 h-5" />
+                    <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
                     Solicitar Orçamento
                   </a>
                 </Button>
-                <Button variant="outline" size="lg" asChild>
+                <Button variant="outline" size="lg" asChild className="w-full sm:w-auto text-sm sm:text-base">
                   <a href="#portfolio">
                     Ver Portfólio
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                   </a>
                 </Button>
               </motion.div>
@@ -550,28 +550,16 @@ const Index = () => {
           }} transition={{
             duration: 0.8,
             delay: 0.3
-          }} className="relative flex justify-center">
-              <div className="relative">
-                <div className="absolute inset-0 bg-primary/20 blur-[80px] rounded-full" />
+          }} className="relative flex justify-center order-1 lg:order-2">
+              <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[380px] lg:max-w-md">
+                <div className="absolute inset-0 bg-primary/20 blur-[60px] sm:blur-[80px] rounded-full" />
                 
-                <div className="relative rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_60px_hsl(24_95%_53%/0.3)]">
-                  <img src={vinnyPhoto} alt="Vinny Artz" className="w-full max-w-md object-cover" style={{
+                <div className="relative rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_40px_hsl(24_95%_53%/0.3)] sm:shadow-[0_0_60px_hsl(24_95%_53%/0.3)]">
+                  <img src={vinnyPhoto} alt="Vinny Artz" className="w-full object-cover" style={{
                   filter: "drop-shadow(0 0 30px hsl(24 95% 53% / 0.3))"
                 }} />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
                 </div>
-
-                <motion.div animate={{
-                y: [0, -10, 0]
-              }} transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }} className="absolute -right-4 top-1/4 glass rounded-lg p-3 border border-primary/30">
-                  
-                </motion.div>
-
-                
               </div>
             </motion.div>
           </div>
@@ -583,7 +571,7 @@ const Index = () => {
         opacity: 1
       }} transition={{
         delay: 1.5
-      }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
+      }} className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 hidden sm:block">
           <motion.div animate={{
           y: [0, 10, 0]
         }} transition={{
@@ -601,9 +589,9 @@ const Index = () => {
       </section>
 
       {/* ========== STATS SECTION ========== */}
-      <section className="py-16 border-y border-border bg-secondary/20">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <section className="py-10 sm:py-16 border-y border-border bg-secondary/20">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             {stats.map((stat, index) => <motion.div key={stat.label} initial={{
             opacity: 0,
             y: 20
@@ -615,10 +603,10 @@ const Index = () => {
           }} transition={{
             delay: index * 0.1
           }} className="text-center">
-                <div className="font-display text-3xl md:text-4xl font-bold text-gradient mb-2">
+                <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-1 sm:mb-2">
                   {stat.value}
                 </div>
-                <div className="text-sm text-muted-foreground uppercase tracking-wider">
+                <div className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider">
                   {stat.label}
                 </div>
               </motion.div>)}
@@ -632,10 +620,10 @@ const Index = () => {
         background: "radial-gradient(ellipse at 50% 0%, hsl(24 95% 53% / 0.05) 0%, transparent 50%)"
       }} />
         
-        <div className="container mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <SectionHeader badge="Sobre" title="Quem Sou Eu" subtitle="Designer gráfico apaixonado por criar experiências visuais que contam histórias" />
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16 sm:mb-20">
             <motion.div initial={{
             opacity: 0,
             x: -50
@@ -645,23 +633,23 @@ const Index = () => {
           }} viewport={{
             once: true
           }}>
-              <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
+              <p className="text-base sm:text-lg text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
                 Com mais de 5 anos de experiência no mercado, já ajudei centenas de clientes 
                 a transformar suas ideias em realidade. Minha jornada começou por curiosidade 
                 e se transformou em uma carreira dedicada a entregar excelência em cada projeto.
               </p>
-              <p className="text-muted-foreground mb-8 leading-relaxed">
+              <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
                 Acredito que o bom design é aquele que resolve problemas de forma elegante e impactante. 
                 Cada pixel, cada cor, cada elemento tem um propósito: comunicar, conectar e converter.
               </p>
-              <Button variant="hero" size="lg" asChild>
+              <Button variant="hero" size="lg" asChild className="w-full sm:w-auto">
                 <a href="https://wa.me/5594991022124" target="_blank" rel="noopener noreferrer">
                   Vamos Conversar
                 </a>
               </Button>
             </motion.div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {values.map((value, index) => <motion.div key={value.title} initial={{
               opacity: 0,
               y: 30
@@ -673,25 +661,25 @@ const Index = () => {
             }} transition={{
               delay: index * 0.1
             }}>
-                  <NeonCard className="h-full text-center p-4">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                      <value.icon className="w-5 h-5 text-primary" />
+                  <NeonCard className="h-full text-center p-3 sm:p-4">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                      <value.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                     </div>
-                    <h3 className="font-display text-sm font-semibold mb-1">{value.title}</h3>
-                    <p className="text-xs text-muted-foreground">{value.description}</p>
+                    <h3 className="font-display text-xs sm:text-sm font-semibold mb-1">{value.title}</h3>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-3">{value.description}</p>
                   </NeonCard>
                 </motion.div>)}
             </div>
           </div>
 
           {/* Timeline */}
-          <div className="mb-20">
+          <div className="mb-16 sm:mb-20">
             <SectionHeader badge="Trajetória" title="Minha Jornada" subtitle="Uma linha do tempo das principais conquistas e evoluções" />
             <div className="relative max-w-3xl mx-auto">
               <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-px" />
               {timeline.map((item, index) => <motion.div key={item.year} initial={{
               opacity: 0,
-              x: index % 2 === 0 ? -50 : 50
+              x: -30
             }} whileInView={{
               opacity: 1,
               x: 0
@@ -699,19 +687,19 @@ const Index = () => {
               once: true
             }} transition={{
               delay: index * 0.1
-            }} className={`relative pl-8 md:pl-0 pb-12 last:pb-0 ${index % 2 === 0 ? "md:pr-[calc(50%+2rem)] md:text-right" : "md:pl-[calc(50%+2rem)]"}`}>
-                  <div className="absolute top-0 left-0 md:left-1/2 w-4 h-4 rounded-full bg-primary border-4 border-background md:-translate-x-1/2 shadow-[0_0_20px_hsl(24_95%_53%/0.5)]" />
-                  <div className="font-display text-primary text-2xl font-bold mb-2">{item.year}</div>
-                  <h3 className="font-display text-lg font-semibold mb-2">{item.title}</h3>
-                  <p className="text-muted-foreground">{item.description}</p>
+            }} className={`relative pl-6 sm:pl-8 md:pl-0 pb-8 sm:pb-12 last:pb-0 ${index % 2 === 0 ? "md:pr-[calc(50%+2rem)] md:text-right" : "md:pl-[calc(50%+2rem)]"}`}>
+                  <div className="absolute top-0 left-0 md:left-1/2 w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-primary border-4 border-background md:-translate-x-1/2 shadow-[0_0_20px_hsl(24_95%_53%/0.5)]" />
+                  <div className="font-display text-primary text-xl sm:text-2xl font-bold mb-1 sm:mb-2">{item.year}</div>
+                  <h3 className="font-display text-base sm:text-lg font-semibold mb-1 sm:mb-2">{item.title}</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground">{item.description}</p>
                 </motion.div>)}
             </div>
           </div>
 
           {/* Skills */}
-          <div className="mb-20">
+          <div className="mb-16 sm:mb-20">
             <SectionHeader badge="Habilidades" title="Minhas Ferramentas" subtitle="As principais tecnologias e softwares que domino" />
-            <div className="max-w-2xl mx-auto space-y-6">
+            <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
               {skills.map((skill, index) => <motion.div key={skill.name} initial={{
               opacity: 0,
               x: -30
@@ -723,11 +711,11 @@ const Index = () => {
             }} transition={{
               delay: index * 0.1
             }}>
-                  <div className="flex justify-between mb-2">
-                    <span className="font-medium">{skill.name}</span>
-                    <span className="text-primary font-display">{skill.level}%</span>
+                  <div className="flex justify-between mb-1 sm:mb-2">
+                    <span className="text-sm sm:text-base font-medium">{skill.name}</span>
+                    <span className="text-sm sm:text-base text-primary font-display">{skill.level}%</span>
                   </div>
-                  <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                  <div className="h-1.5 sm:h-2 bg-secondary rounded-full overflow-hidden">
                     <motion.div initial={{
                   width: 0
                 }} whileInView={{
@@ -746,9 +734,9 @@ const Index = () => {
           </div>
 
           {/* Process */}
-          <div className="mb-20">
+          <div className="mb-16 sm:mb-20">
             <SectionHeader badge="Processo" title="Como Trabalho" subtitle="Um processo estruturado para garantir qualidade e sua satisfação" />
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
               {processSteps.map((step, index) => <motion.div key={step.step} initial={{
               opacity: 0,
               y: 30
@@ -760,13 +748,13 @@ const Index = () => {
             }} transition={{
               delay: index * 0.15
             }} className="relative">
-                  <NeonCard className="h-full">
-                    <div className="font-display text-5xl font-bold text-primary/20 mb-4">{step.step}</div>
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                      <step.icon className="w-6 h-6 text-primary" />
+                  <NeonCard className="h-full p-3 sm:p-6">
+                    <div className="font-display text-3xl sm:text-5xl font-bold text-primary/20 mb-2 sm:mb-4">{step.step}</div>
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-2 sm:mb-4">
+                      <step.icon className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
                     </div>
-                    <h3 className="font-display text-xl font-semibold mb-2">{step.title}</h3>
-                    <p className="text-muted-foreground text-sm">{step.description}</p>
+                    <h3 className="font-display text-sm sm:text-xl font-semibold mb-1 sm:mb-2">{step.title}</h3>
+                    <p className="text-muted-foreground text-xs sm:text-sm line-clamp-3">{step.description}</p>
                   </NeonCard>
                   {index < processSteps.length - 1 && <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-primary/30" />}
                 </motion.div>)}
@@ -785,12 +773,12 @@ const Index = () => {
           }} viewport={{
             once: true
           }} className="max-w-3xl mx-auto">
-              <Accordion type="single" collapsible className="space-y-4">
-                {faqs.map((faq, index) => <AccordionItem key={index} value={`item-${index}`} className="bg-card border border-border rounded-lg px-6 data-[state=open]:border-primary/50">
-                    <AccordionTrigger className="font-display text-left hover:text-primary">
+              <Accordion type="single" collapsible className="space-y-3 sm:space-y-4">
+                {faqs.map((faq, index) => <AccordionItem key={index} value={`item-${index}`} className="bg-card border border-border rounded-lg px-4 sm:px-6 data-[state=open]:border-primary/50">
+                    <AccordionTrigger className="font-display text-left hover:text-primary text-sm sm:text-base py-3 sm:py-4">
                       {faq.question}
                     </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground">
+                    <AccordionContent className="text-muted-foreground text-sm sm:text-base pb-3 sm:pb-4">
                       {faq.answer}
                     </AccordionContent>
                   </AccordionItem>)}
@@ -802,10 +790,10 @@ const Index = () => {
 
       {/* ========== SERVICES SECTION ========== */}
       <section id="servicos" className="section-padding bg-secondary/20">
-        <div className="container mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <SectionHeader badge="Serviços" title="O Que Eu Faço" subtitle="Soluções criativas completas para transformar sua presença visual e digital" />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-8 sm:mb-12">
             {services.map((service, index) => <motion.div key={service.title} initial={{
             opacity: 0,
             y: 30
@@ -817,22 +805,22 @@ const Index = () => {
           }} transition={{
             delay: index * 0.1
           }}>
-                <NeonCard className="h-full text-center">
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 mx-auto">
-                    <service.icon className="w-6 h-6 text-primary" />
+                <NeonCard className="h-full text-center p-3 sm:p-6">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-2 sm:mb-4 mx-auto">
+                    <service.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                   </div>
-                  <h3 className="font-display text-lg font-semibold mb-2">{service.title}</h3>
-                  <p className="text-sm text-muted-foreground">{service.description}</p>
+                  <h3 className="font-display text-xs sm:text-lg font-semibold mb-1 sm:mb-2">{service.title}</h3>
+                  <p className="text-[10px] sm:text-sm text-muted-foreground line-clamp-2 sm:line-clamp-none">{service.description}</p>
                 </NeonCard>
               </motion.div>)}
           </div>
 
           {/* Service Details Tabs */}
           <Tabs value={activeServiceTab} onValueChange={setActiveServiceTab} className="w-full">
-            <TabsList className="flex flex-wrap justify-center gap-2 bg-transparent h-auto mb-8">
-              {serviceCategories.map(category => <TabsTrigger key={category.id} value={category.id} className="flex items-center gap-2 px-4 py-2 rounded-lg font-display text-xs uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:bg-card data-[state=inactive]:border data-[state=inactive]:border-border data-[state=inactive]:hover:border-primary/50 transition-all">
-                  <category.icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{category.title}</span>
+            <TabsList className="flex flex-wrap justify-center gap-1.5 sm:gap-2 bg-transparent h-auto mb-6 sm:mb-8 px-2">
+              {serviceCategories.map(category => <TabsTrigger key={category.id} value={category.id} className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg font-display text-[10px] sm:text-xs uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:bg-card data-[state=inactive]:border data-[state=inactive]:border-border data-[state=inactive]:hover:border-primary/50 transition-all">
+                  <category.icon className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden xs:inline sm:inline">{category.title}</span>
                 </TabsTrigger>)}
             </TabsList>
 
@@ -846,11 +834,11 @@ const Index = () => {
             }} transition={{
               duration: 0.4
             }}>
-                  <div className="text-center mb-8">
-                    <h3 className="font-display text-2xl font-bold mb-2">{category.title}</h3>
-                    <p className="text-muted-foreground">{category.description}</p>
+                  <div className="text-center mb-6 sm:mb-8">
+                    <h3 className="font-display text-xl sm:text-2xl font-bold mb-1 sm:mb-2">{category.title}</h3>
+                    <p className="text-sm sm:text-base text-muted-foreground">{category.description}</p>
                   </div>
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
                     {category.items.map((item, index) => <motion.div key={item.title} initial={{
                   opacity: 0,
                   y: 20
@@ -861,17 +849,17 @@ const Index = () => {
                   delay: index * 0.1
                 }}>
                         <NeonCard className="h-full">
-                          <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                              <item.icon className="w-6 h-6 text-primary" />
+                          <div className="flex items-start gap-3 sm:gap-4">
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                              <item.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                             </div>
-                            <div className="flex-1">
-                              <h4 className="font-display text-lg font-semibold mb-2">{item.title}</h4>
-                              <p className="text-sm text-muted-foreground mb-4">{item.description}</p>
-                              <div className="flex flex-wrap gap-2">
-                                {item.features.map(feature => <span key={feature} className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-secondary text-muted-foreground">
-                                    <CheckCircle className="w-3 h-3 text-primary" />
-                                    {feature}
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-display text-base sm:text-lg font-semibold mb-1 sm:mb-2">{item.title}</h4>
+                              <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">{item.description}</p>
+                              <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                                {item.features.map(feature => <span key={feature} className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs rounded-full bg-secondary text-muted-foreground">
+                                    <CheckCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-primary flex-shrink-0" />
+                                    <span className="truncate">{feature}</span>
                                   </span>)}
                               </div>
                             </div>
@@ -885,9 +873,9 @@ const Index = () => {
                 opacity: 1
               }} transition={{
                 delay: 0.5
-              }} className="mt-6 p-4 rounded-lg bg-primary/5 border border-primary/20 text-center">
-                      <p className="text-sm text-muted-foreground">
-                        <Star className="w-4 h-4 text-primary inline mr-2" />
+              }} className="mt-4 sm:mt-6 p-3 sm:p-4 rounded-lg bg-primary/5 border border-primary/20 text-center">
+                      <p className="text-xs sm:text-sm text-muted-foreground">
+                        <Star className="w-3 h-3 sm:w-4 sm:h-4 text-primary inline mr-1 sm:mr-2" />
                         {category.note}
                       </p>
                     </motion.div>}
@@ -899,7 +887,7 @@ const Index = () => {
 
       {/* ========== PORTFOLIO SECTION ========== */}
       <section id="portfolio" className="section-padding">
-        <div className="container mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <SectionHeader badge="Portfólio" title="Meus Trabalhos" subtitle="Uma seleção dos projetos que tive o prazer de desenvolver" />
 
           <motion.div initial={{
@@ -910,14 +898,14 @@ const Index = () => {
           y: 0
         }} viewport={{
           once: true
-        }} className="flex flex-wrap justify-center gap-2 mb-12">
-            {portfolioCategories.map(category => <Button key={category.id} variant={activePortfolioCategory === category.id ? "default" : "outline"} size="sm" onClick={() => setActivePortfolioCategory(category.id)} className="flex items-center gap-2">
-                <category.icon className="w-4 h-4" />
-                {category.name}
+        }} className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-8 sm:mb-12 px-2">
+            {portfolioCategories.map(category => <Button key={category.id} variant={activePortfolioCategory === category.id ? "default" : "outline"} size="sm" onClick={() => setActivePortfolioCategory(category.id)} className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-2 sm:px-3 py-1 sm:py-2 h-auto">
+                <category.icon className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden xs:inline">{category.name}</span>
               </Button>)}
           </motion.div>
 
-          <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <motion.div layout className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             {filteredPortfolioItems.map((item, index) => <motion.div key={item.id} layout initial={{
             opacity: 0,
             scale: 0.9
@@ -929,21 +917,21 @@ const Index = () => {
             scale: 0.9
           }} transition={{
             delay: index * 0.1
-          }} className="group relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer" onMouseEnter={() => setHoveredPortfolioItem(item.id)} onMouseLeave={() => setHoveredPortfolioItem(null)}>
+          }} className="group relative aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden cursor-pointer" onMouseEnter={() => setHoveredPortfolioItem(item.id)} onMouseLeave={() => setHoveredPortfolioItem(null)}>
                 <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute inset-0 p-6 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                  <span className="text-xs font-display uppercase tracking-wider text-primary mb-2">
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 p-3 sm:p-6 flex flex-col justify-end sm:translate-y-4 sm:group-hover:translate-y-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300">
+                  <span className="text-[10px] sm:text-xs font-display uppercase tracking-wider text-primary mb-1 sm:mb-2">
                     {portfolioCategories.find(c => c.id === item.category)?.name}
                   </span>
-                  <h3 className="font-display text-xl font-semibold mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-4">{item.description}</p>
-                  <Button variant="glass" size="sm" className="w-fit">
+                  <h3 className="font-display text-sm sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1">{item.title}</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-4 line-clamp-2 hidden sm:block">{item.description}</p>
+                  <Button variant="glass" size="sm" className="w-fit text-xs hidden sm:flex">
                     Ver Projeto
-                    <ExternalLink className="w-4 h-4" />
+                    <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
                   </Button>
                 </div>
-                <div className={`absolute inset-0 border-2 rounded-xl transition-all duration-300 ${hoveredPortfolioItem === item.id ? "border-primary shadow-[0_0_30px_hsl(24_95%_53%/0.3)]" : "border-transparent"}`} />
+                <div className={`absolute inset-0 border-2 rounded-lg sm:rounded-xl transition-all duration-300 ${hoveredPortfolioItem === item.id ? "border-primary shadow-[0_0_30px_hsl(24_95%_53%/0.3)]" : "border-transparent"}`} />
               </motion.div>)}
           </motion.div>
 
@@ -953,10 +941,10 @@ const Index = () => {
           opacity: 1
         }} viewport={{
           once: true
-        }} className="mt-12 text-center">
-            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary/5 border border-primary/20">
-              <Filter className="w-5 h-5 text-primary" />
-              <span className="text-sm text-muted-foreground">
+        }} className="mt-8 sm:mt-12 text-center">
+            <div className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-primary/5 border border-primary/20">
+              <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+              <span className="text-xs sm:text-sm text-muted-foreground">
                 O portfólio completo será atualizado via banco de dados.
               </span>
             </div>
@@ -966,10 +954,10 @@ const Index = () => {
 
       {/* ========== TESTIMONIALS SECTION ========== */}
       <section id="depoimentos" className="section-padding bg-secondary/20">
-        <div className="container mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <SectionHeader badge="Depoimentos" title="O Que Dizem Meus Clientes" subtitle="A satisfação dos meus clientes é minha maior motivação" />
 
-          <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto mb-12">
+          <div className="grid grid-cols-3 gap-3 sm:gap-4 max-w-2xl mx-auto mb-8 sm:mb-12">
             {[{
             value: "200+",
             label: "Clientes"
@@ -990,17 +978,17 @@ const Index = () => {
           }} transition={{
             delay: index * 0.1
           }} className="text-center">
-                <div className="font-display text-2xl md:text-3xl font-bold text-gradient">
+                <div className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-gradient">
                   {stat.value}
                 </div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wider">
+                <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">
                   {stat.label}
                 </div>
               </motion.div>)}
           </div>
 
           <div className="relative">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {currentTestimonials.map((testimonial, index) => <motion.div key={testimonial.id} initial={{
               opacity: 0,
               y: 30
@@ -1010,32 +998,32 @@ const Index = () => {
             }} transition={{
               delay: index * 0.1
             }}>
-                  <NeonCard className="h-full">
-                    <Quote className="w-10 h-10 text-primary/20 mb-4" />
-                    <p className="text-muted-foreground leading-relaxed mb-6">"{testimonial.content}"</p>
-                    <div className="flex gap-1 mb-4">
-                      {[...Array(testimonial.rating)].map((_, i) => <Star key={i} className="w-4 h-4 fill-primary text-primary" />)}
+                  <NeonCard className="h-full p-4 sm:p-6">
+                    <Quote className="w-8 h-8 sm:w-10 sm:h-10 text-primary/20 mb-3 sm:mb-4" />
+                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4 sm:mb-6 line-clamp-4 sm:line-clamp-none">"{testimonial.content}"</p>
+                    <div className="flex gap-0.5 sm:gap-1 mb-3 sm:mb-4">
+                      {[...Array(testimonial.rating)].map((_, i) => <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 fill-primary text-primary" />)}
                     </div>
-                    <div className="flex items-center gap-3">
-                      <img src={testimonial.image} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover border-2 border-primary/30" />
-                      <div>
-                        <div className="font-semibold">{testimonial.name}</div>
-                        <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <img src={testimonial.image} alt={testimonial.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-primary/30" />
+                      <div className="min-w-0">
+                        <div className="font-semibold text-sm sm:text-base truncate">{testimonial.name}</div>
+                        <div className="text-xs sm:text-sm text-muted-foreground truncate">{testimonial.role}</div>
                       </div>
                     </div>
                   </NeonCard>
                 </motion.div>)}
             </div>
 
-            {totalTestimonialSlides > 1 && <div className="flex items-center justify-center gap-4 mt-8">
-                <Button variant="outline" size="icon" onClick={() => setCurrentTestimonialSlide(prev => (prev - 1 + totalTestimonialSlides) % totalTestimonialSlides)} className="rounded-full">
-                  <ChevronLeft className="w-5 h-5" />
+            {totalTestimonialSlides > 1 && <div className="flex items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-8">
+                <Button variant="outline" size="icon" onClick={() => setCurrentTestimonialSlide(prev => (prev - 1 + totalTestimonialSlides) % totalTestimonialSlides)} className="rounded-full w-8 h-8 sm:w-10 sm:h-10">
+                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
-                <div className="flex gap-2">
-                  {[...Array(totalTestimonialSlides)].map((_, i) => <button key={i} onClick={() => setCurrentTestimonialSlide(i)} className={`w-2 h-2 rounded-full transition-all ${i === currentTestimonialSlide ? "w-8 bg-primary" : "bg-primary/30 hover:bg-primary/50"}`} />)}
+                <div className="flex gap-1.5 sm:gap-2">
+                  {[...Array(totalTestimonialSlides)].map((_, i) => <button key={i} onClick={() => setCurrentTestimonialSlide(i)} className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all ${i === currentTestimonialSlide ? "w-6 sm:w-8 bg-primary" : "bg-primary/30 hover:bg-primary/50"}`} />)}
                 </div>
-                <Button variant="outline" size="icon" onClick={() => setCurrentTestimonialSlide(prev => (prev + 1) % totalTestimonialSlides)} className="rounded-full">
-                  <ChevronRight className="w-5 h-5" />
+                <Button variant="outline" size="icon" onClick={() => setCurrentTestimonialSlide(prev => (prev + 1) % totalTestimonialSlides)} className="rounded-full w-8 h-8 sm:w-10 sm:h-10">
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </div>}
           </div>
@@ -1044,11 +1032,11 @@ const Index = () => {
 
       {/* ========== CONTACT SECTION ========== */}
       <section id="contato" className="section-padding">
-        <div className="container mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <SectionHeader badge="Contato" title="Vamos Criar Algo Incrível Juntos?" subtitle="Estou pronto para transformar suas ideias em realidade" />
 
-          <div className="grid lg:grid-cols-5 gap-12">
-            <div className="lg:col-span-2 space-y-8">
+          <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
+            <div className="lg:col-span-2 space-y-6 sm:space-y-8">
               <motion.div initial={{
               opacity: 0,
               x: -30
@@ -1058,8 +1046,8 @@ const Index = () => {
             }} viewport={{
               once: true
             }}>
-                <h3 className="font-display text-xl font-bold mb-6">Informações de Contato</h3>
-                <div className="space-y-4">
+                <h3 className="font-display text-lg sm:text-xl font-bold mb-4 sm:mb-6">Informações de Contato</h3>
+                <div className="space-y-3 sm:space-y-4">
                   {contactInfo.map((info, index) => <motion.a key={info.label} href={info.link} target={info.link.startsWith("http") ? "_blank" : undefined} rel={info.link.startsWith("http") ? "noopener noreferrer" : undefined} initial={{
                   opacity: 0,
                   y: 20
@@ -1070,13 +1058,13 @@ const Index = () => {
                   once: true
                 }} transition={{
                   delay: index * 0.1
-                }} className="flex items-center gap-4 p-4 rounded-lg bg-card border border-border hover:border-primary/50 transition-all group">
-                      <div className={`w-12 h-12 rounded-lg bg-secondary flex items-center justify-center ${info.color} group-hover:scale-110 transition-transform`}>
-                        <info.icon className="w-6 h-6" />
+                }} className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg bg-card border border-border hover:border-primary/50 transition-all group">
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-secondary flex items-center justify-center ${info.color} group-hover:scale-110 transition-transform flex-shrink-0`}>
+                        <info.icon className="w-5 h-5 sm:w-6 sm:h-6" />
                       </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground">{info.label}</div>
-                        <div className="font-medium">{info.value}</div>
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm text-muted-foreground">{info.label}</div>
+                        <div className="font-medium text-sm sm:text-base truncate">{info.value}</div>
                       </div>
                     </motion.a>)}
                 </div>
@@ -1093,12 +1081,12 @@ const Index = () => {
             }} transition={{
               delay: 0.3
             }}>
-                <h3 className="font-display text-lg font-semibold mb-4 flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-primary" />
+                <h3 className="font-display text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                   Horário de Atendimento
                 </h3>
-                <div className="space-y-2">
-                  {businessHours.map(item => <div key={item.day} className="flex justify-between text-sm py-2 border-b border-border last:border-0">
+                <div className="space-y-1.5 sm:space-y-2">
+                  {businessHours.map(item => <div key={item.day} className="flex justify-between text-xs sm:text-sm py-1.5 sm:py-2 border-b border-border last:border-0">
                       <span className="text-muted-foreground">{item.day}</span>
                       <span className="font-medium">{item.hours}</span>
                     </div>)}
@@ -1115,14 +1103,14 @@ const Index = () => {
               once: true
             }} transition={{
               delay: 0.4
-            }} className="p-6 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-                <h3 className="font-display text-lg font-semibold mb-2">Resposta Rápida</h3>
-                <p className="text-sm text-muted-foreground mb-4">
+            }} className="p-4 sm:p-6 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                <h3 className="font-display text-base sm:text-lg font-semibold mb-1 sm:mb-2">Resposta Rápida</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
                   Para atendimento imediato, entre em contato pelo WhatsApp!
                 </p>
                 <Button variant="hero" className="w-full" asChild>
                   <a href="https://wa.me/5594991022124" target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="w-5 h-5" />
+                    <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                     Chamar no WhatsApp
                   </a>
                 </Button>
