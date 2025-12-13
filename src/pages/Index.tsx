@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { ArrowRight, Palette, Video, Globe, Printer, FileText, Sparkles, Star, ChevronRight, User, Target, Heart, Lightbulb, Rocket, CheckCircle, Zap, Code, Image, Share2, Megaphone, PenTool, Monitor, Smartphone, Film, Layout, Search, FileCheck, FolderOpen, ExternalLink, Filter, Quote, ChevronLeft, MessageCircle, Instagram, Mail, MapPin, Phone, Send, Clock } from "lucide-react";
+import { ArrowRight, Palette, Video, Globe, Printer, FileText, Sparkles, Star, ChevronRight, User, Target, Heart, Lightbulb, Rocket, CheckCircle, Zap, Code, Image, Share2, Megaphone, PenTool, Monitor, Smartphone, Film, Layout, Search, FileCheck, FolderOpen, ExternalLink, Filter, Quote, ChevronLeft, MessageCircle, Instagram, Mail, MapPin, Phone, Send, Clock, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/section-header";
 import { NeonCard } from "@/components/ui/neon-card";
@@ -391,10 +391,17 @@ const contactInfo = [{
 }, {
   icon: Mail,
   label: "E-mail",
-  value: "contato@vinnyartz.com",
-  link: "mailto:contato@vinnyartz.com",
+  value: "vinnyfpamz@gmail.com",
+  link: "mailto:vinnyfpamz@gmail.com",
   color: "text-primary"
 }];
+
+// Video testimonials placeholders
+const videoTestimonials = [
+  { id: 1, title: "Depoimento em Vídeo #1", placeholder: true },
+  { id: 2, title: "Depoimento em Vídeo #2", placeholder: true },
+  { id: 3, title: "Depoimento em Vídeo #3", placeholder: true },
+];
 const businessHours = [{
   day: "Segunda - Sexta",
   hours: "08:00 - 18:00"
@@ -1026,6 +1033,67 @@ const Index = () => {
                   <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </div>}
+          </div>
+
+          {/* Video Testimonials Section */}
+          <div className="mt-16 sm:mt-20">
+            <SectionHeader 
+              badge="Vídeos" 
+              title="Depoimentos em Vídeo" 
+              subtitle="Em breve, vídeos com relatos reais de clientes satisfeitos" 
+            />
+            
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {videoTestimonials.map((video, index) => (
+                <motion.div
+                  key={video.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 }}
+                >
+                  <NeonCard className="h-full aspect-video relative overflow-hidden group">
+                    {/* Placeholder background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-secondary via-background to-secondary" />
+                    
+                    {/* Grid pattern overlay */}
+                    <div 
+                      className="absolute inset-0 opacity-10"
+                      style={{
+                        backgroundImage: "linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)",
+                        backgroundSize: "20px 20px"
+                      }}
+                    />
+                    
+                    {/* Play button */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-primary/30 transition-all cursor-pointer"
+                        style={{
+                          boxShadow: "0 0 30px hsl(24 95% 53% / 0.3)"
+                        }}
+                      >
+                        <div className="w-0 h-0 border-l-[14px] sm:border-l-[16px] border-l-primary border-t-[8px] sm:border-t-[10px] border-t-transparent border-b-[8px] sm:border-b-[10px] border-b-transparent ml-1" />
+                      </motion.div>
+                    </div>
+                    
+                    {/* "Em breve" badge */}
+                    <div className="absolute top-3 right-3 px-2 py-1 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-sm">
+                      <span className="text-[10px] sm:text-xs font-display uppercase tracking-wider text-primary">
+                        Em Breve
+                      </span>
+                    </div>
+                    
+                    {/* Title at bottom */}
+                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 bg-gradient-to-t from-background/90 to-transparent">
+                      <p className="text-xs sm:text-sm font-medium text-foreground">{video.title}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Vídeo em produção</p>
+                    </div>
+                  </NeonCard>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

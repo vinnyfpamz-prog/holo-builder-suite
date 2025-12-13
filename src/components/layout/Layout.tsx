@@ -11,7 +11,7 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="min-h-screen bg-background relative cursor-none lg:cursor-none">
+    <div className="min-h-screen bg-background relative">
       <CustomCursor />
       <ParticlesBackground />
       <Navbar />

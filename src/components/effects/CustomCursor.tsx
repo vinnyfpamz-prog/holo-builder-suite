@@ -66,74 +66,49 @@ export const CustomCursor = () => {
     <AnimatePresence>
       {isVisible && (
         <>
-          {/* Main cursor glow */}
+          {/* Main cursor glow - soft and subtle */}
           <motion.div
             className="fixed pointer-events-none z-[9999] mix-blend-screen"
             animate={{
-              x: mousePosition.x - 150,
-              y: mousePosition.y - 150,
-              scale: isHovering ? 1.5 : 1,
+              x: mousePosition.x - 100,
+              y: mousePosition.y - 100,
+              scale: isHovering ? 1.3 : 1,
             }}
             transition={{
               type: "spring",
-              stiffness: 150,
-              damping: 15,
-              mass: 0.5,
+              stiffness: 200,
+              damping: 20,
+              mass: 0.3,
             }}
             style={{
-              width: 300,
-              height: 300,
-              background: "radial-gradient(circle, hsl(24 95% 53% / 0.15) 0%, hsl(24 95% 53% / 0.05) 40%, transparent 70%)",
+              width: 200,
+              height: 200,
+              background: "radial-gradient(circle, hsl(24 95% 53% / 0.12) 0%, hsl(24 95% 53% / 0.04) 50%, transparent 70%)",
               borderRadius: "50%",
             }}
           />
 
-          {/* Inner cursor dot */}
+          {/* Subtle inner glow */}
           <motion.div
-            className="fixed pointer-events-none z-[9999]"
+            className="fixed pointer-events-none z-[9998] mix-blend-screen"
             animate={{
-              x: mousePosition.x - 6,
-              y: mousePosition.y - 6,
-              scale: isHovering ? 2 : 1,
+              x: mousePosition.x - 40,
+              y: mousePosition.y - 40,
+              scale: isHovering ? 1.2 : 1,
             }}
             transition={{
               type: "spring",
-              stiffness: 500,
-              damping: 28,
+              stiffness: 300,
+              damping: 25,
+              mass: 0.2,
             }}
             style={{
-              width: 12,
-              height: 12,
-              background: "hsl(24 95% 53%)",
+              width: 80,
+              height: 80,
+              background: "radial-gradient(circle, hsl(24 95% 53% / 0.2) 0%, hsl(24 95% 53% / 0.08) 40%, transparent 70%)",
               borderRadius: "50%",
-              boxShadow: "0 0 20px hsl(24 95% 53% / 0.8), 0 0 40px hsl(24 95% 53% / 0.4)",
             }}
           />
-
-          {/* Trailing particles */}
-          {[...Array(3)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="fixed pointer-events-none z-[9998]"
-              animate={{
-                x: mousePosition.x - 4,
-                y: mousePosition.y - 4,
-              }}
-              transition={{
-                type: "spring",
-                stiffness: 100 - i * 20,
-                damping: 20 + i * 5,
-                mass: 0.5 + i * 0.2,
-              }}
-              style={{
-                width: 8 - i * 2,
-                height: 8 - i * 2,
-                background: `hsl(24 95% 53% / ${0.6 - i * 0.15})`,
-                borderRadius: "50%",
-                boxShadow: `0 0 ${10 - i * 2}px hsl(24 95% 53% / ${0.5 - i * 0.1})`,
-              }}
-            />
-          ))}
         </>
       )}
     </AnimatePresence>
