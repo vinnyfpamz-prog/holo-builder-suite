@@ -67,46 +67,32 @@ export const CustomCursor = () => {
       {isVisible && (
         <>
           {/* Main cursor glow - soft and subtle */}
-          <motion.div
+          <div
             className="fixed pointer-events-none z-[9999] mix-blend-screen"
-            animate={{
-              x: mousePosition.x - 100,
-              y: mousePosition.y - 100,
-              scale: isHovering ? 1.3 : 1,
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              mass: 0.3,
-            }}
             style={{
+              left: mousePosition.x - 100,
+              top: mousePosition.y - 100,
               width: 200,
               height: 200,
               background: "radial-gradient(circle, hsl(24 95% 53% / 0.12) 0%, hsl(24 95% 53% / 0.04) 50%, transparent 70%)",
               borderRadius: "50%",
+              transform: isHovering ? "scale(1.3)" : "scale(1)",
+              transition: "transform 0.15s ease-out",
             }}
           />
 
           {/* Subtle inner glow */}
-          <motion.div
+          <div
             className="fixed pointer-events-none z-[9998] mix-blend-screen"
-            animate={{
-              x: mousePosition.x - 40,
-              y: mousePosition.y - 40,
-              scale: isHovering ? 1.2 : 1,
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 25,
-              mass: 0.2,
-            }}
             style={{
+              left: mousePosition.x - 40,
+              top: mousePosition.y - 40,
               width: 80,
               height: 80,
               background: "radial-gradient(circle, hsl(24 95% 53% / 0.2) 0%, hsl(24 95% 53% / 0.08) 40%, transparent 70%)",
               borderRadius: "50%",
+              transform: isHovering ? "scale(1.2)" : "scale(1)",
+              transition: "transform 0.15s ease-out",
             }}
           />
         </>
