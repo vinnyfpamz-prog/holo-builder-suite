@@ -42,36 +42,40 @@ const stats = [{
   value: "200+",
   label: "Clientes Satisfeitos"
 }, {
-  value: "5+",
+  value: "6+",
   label: "Anos de Experiência"
 }, {
   value: "100%",
   label: "Dedicação"
 }];
 const timeline = [{
-  year: "2019",
-  title: "Início da Jornada",
-  description: "Comecei a explorar o mundo do design gráfico, aprendendo as bases fundamentais."
-}, {
   year: "2020",
-  title: "Primeiros Clientes",
-  description: "Conquistei meus primeiros clientes e iniciei projetos de identidade visual."
+  title: "Início da Jornada",
+  description: "Comecei a explorar o mundo do design gráfico, aprendendo as bases fundamentais e conquistando os primeiros clientes."
 }, {
   year: "2021",
   title: "Expansão de Serviços",
-  description: "Adicionei edição de vídeo ao meu portfólio de serviços."
+  description: "Adicionei edição de vídeo ao meu portfólio e desenvolvi projetos de identidade visual."
 }, {
   year: "2022",
   title: "Web Design",
-  description: "Expandi para criação de sites e landing pages, oferecendo soluções completas."
+  description: "Expandi para criação de sites e landing pages, oferecendo soluções digitais completas."
 }, {
   year: "2023",
   title: "Parceria Gráfica",
   description: "Estabeleci parcerias com gráficas para oferecer materiais impressos de qualidade."
 }, {
   year: "2024",
-  title: "Vinny Artz Studio",
-  description: "Consolidação como estúdio criativo completo, atendendo clientes em todo Brasil."
+  title: "Crescimento e Inovação",
+  description: "Incorporei novas ferramentas de IA e tecnologias para entregar projetos ainda mais impactantes."
+}, {
+  year: "2025",
+  title: "Novos Horizontes",
+  description: "Ampliação do portfólio com soluções digitais avançadas e atendimento personalizado."
+}, {
+  year: "2026",
+  title: "Atualidade",
+  description: "Atendendo clientes em toda a região de Parauapebas e entregando projetos de alto impacto."
 }];
 const skills = [{
   name: "Adobe Photoshop",
@@ -80,14 +84,38 @@ const skills = [{
   name: "Adobe Illustrator",
   level: 90
 }, {
+  name: "Corel Draw",
+  level: 88
+}, {
   name: "Adobe Premiere",
   level: 85
+}, {
+  name: "CapCut",
+  level: 90
 }, {
   name: "Figma",
   level: 90
 }, {
-  name: "Web Design",
+  name: "Canva",
+  level: 95
+}, {
+  name: "PicsArt",
   level: 85
+}, {
+  name: "Pacote Office",
+  level: 88
+}, {
+  name: "Marketing Digital",
+  level: 80
+}, {
+  name: "Técnicas em Vendas",
+  level: 78
+}, {
+  name: "Ferramentas IA",
+  level: 85
+}, {
+  name: "Fotografia",
+  level: 82
 }];
 const values = [{
   icon: Target,
@@ -641,8 +669,8 @@ const Index = () => {
             once: true
           }}>
               <p className="text-base sm:text-lg text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
-                Com mais de 5 anos de experiência no mercado, já ajudei centenas de clientes 
-                a transformar suas ideias em realidade. Minha jornada começou por curiosidade 
+                Com mais de 6 anos de experiência no mercado, já ajudei centenas de clientes 
+                a transformar suas ideias em realidade. Minha jornada começou em 2020 por curiosidade 
                 e se transformou em uma carreira dedicada a entregar excelência em cada projeto.
               </p>
               <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
@@ -924,21 +952,20 @@ const Index = () => {
             scale: 0.9
           }} transition={{
             delay: index * 0.1
-          }} className="group relative aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden cursor-pointer" onMouseEnter={() => setHoveredPortfolioItem(item.id)} onMouseLeave={() => setHoveredPortfolioItem(null)}>
+          }} className="group relative aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden cursor-pointer border-2 border-primary/30 hover:border-primary shadow-[0_0_15px_hsl(24_95%_53%/0.15)] hover:shadow-[0_0_30px_hsl(24_95%_53%/0.3)] transition-all duration-300" onMouseEnter={() => setHoveredPortfolioItem(item.id)} onMouseLeave={() => setHoveredPortfolioItem(null)}>
                 <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute inset-0 p-3 sm:p-6 flex flex-col justify-end sm:translate-y-4 sm:group-hover:translate-y-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                <div className="absolute inset-0 p-3 sm:p-6 flex flex-col justify-end">
                   <span className="text-[10px] sm:text-xs font-display uppercase tracking-wider text-primary mb-1 sm:mb-2">
                     {portfolioCategories.find(c => c.id === item.category)?.name}
                   </span>
                   <h3 className="font-display text-sm sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1">{item.title}</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-4 line-clamp-2 hidden sm:block">{item.description}</p>
-                  <Button variant="glass" size="sm" className="w-fit text-xs hidden sm:flex">
-                    Ver Projeto
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 line-clamp-2">{item.description}</p>
+                  <Button variant="hero" size="sm" className="w-full text-xs flex items-center justify-center gap-1.5">
                     <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                    Ver Projeto
                   </Button>
                 </div>
-                <div className={`absolute inset-0 border-2 rounded-lg sm:rounded-xl transition-all duration-300 ${hoveredPortfolioItem === item.id ? "border-primary shadow-[0_0_30px_hsl(24_95%_53%/0.3)]" : "border-transparent"}`} />
               </motion.div>)}
           </motion.div>
 
