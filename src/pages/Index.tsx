@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowRight, Palette, Video, Globe, Printer, FileText, Sparkles, Star, ChevronRight, User, Target, Heart, Lightbulb, Rocket, CheckCircle, Zap, Code, Image, Share2, Megaphone, PenTool, Monitor, Smartphone, Film, Layout, Search, FileCheck, FolderOpen, ExternalLink, Filter, Quote, ChevronLeft, MessageCircle, Instagram, Mail, MapPin, Phone, Send, Clock, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/section-header";
@@ -9,8 +9,26 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 import vinnyPhoto from "@/assets/vinny-photo.png";
+
+// Types for database items
+type PortfolioItem = {
+  id: string;
+  title: string;
+  description: string | null;
+  image_url: string | null;
+  external_link: string | null;
+  category_slug: string | null;
+};
+
+type PortfolioCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  icon: string | null;
+};
 
 // ========== DATA ==========
 
@@ -78,22 +96,10 @@ const timeline = [{
   description: "Atendendo clientes em toda a região de Parauapebas e entregando projetos de alto impacto."
 }];
 const skills = [{
-  name: "Adobe Photoshop",
+  name: "Corel Draw",
   level: 95
 }, {
-  name: "Adobe Illustrator",
-  level: 90
-}, {
-  name: "Corel Draw",
-  level: 88
-}, {
-  name: "Adobe Premiere",
-  level: 85
-}, {
   name: "CapCut",
-  level: 90
-}, {
-  name: "Figma",
   level: 90
 }, {
   name: "Canva",
@@ -106,16 +112,16 @@ const skills = [{
   level: 88
 }, {
   name: "Marketing Digital",
-  level: 80
-}, {
-  name: "Técnicas em Vendas",
-  level: 78
-}, {
-  name: "Ferramentas IA",
   level: 85
 }, {
+  name: "Técnicas em Vendas",
+  level: 80
+}, {
+  name: "Ferramentas IA",
+  level: 88
+}, {
   name: "Fotografia",
-  level: 82
+  level: 85
 }];
 const values = [{
   icon: Target,
@@ -299,68 +305,15 @@ const serviceCategories = [{
     features: ["Design Moderno", "Infográficos", "Templates"]
   }]
 }];
-const portfolioCategories = [{
-  id: "all",
-  name: "Todos",
-  icon: Star
-}, {
-  id: "digital",
-  name: "Artes Digitais",
-  icon: Palette
-}, {
-  id: "impressos",
-  name: "Impressos",
-  icon: Printer
-}, {
-  id: "video",
-  name: "Vídeos",
-  icon: Video
-}, {
-  id: "web",
-  name: "Web",
-  icon: Globe
-}, {
-  id: "identidade",
-  name: "Identidade Visual",
-  icon: PenTool
-}];
-const portfolioItems = [{
-  id: 1,
-  title: "Identidade Visual - Tech Startup",
-  category: "identidade",
-  description: "Desenvolvimento completo de marca para startup de tecnologia",
-  image: "https://images.unsplash.com/photo-1634942537034-2531766767d1?w=800&h=600&fit=crop"
-}, {
-  id: 2,
-  title: "Social Media - Restaurante",
-  category: "digital",
-  description: "Pacote de artes para redes sociais de restaurante gourmet",
-  image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop"
-}, {
-  id: 3,
-  title: "Vídeo Promocional - Academia",
-  category: "video",
-  description: "Vídeo institucional para academia fitness",
-  image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&h=600&fit=crop"
-}, {
-  id: 4,
-  title: "Landing Page - E-commerce",
-  category: "web",
-  description: "Página de vendas de alta conversão para loja online",
-  image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop"
-}, {
-  id: 5,
-  title: "Cartão de Visita Premium",
-  category: "impressos",
-  description: "Design de cartão com acabamento especial dourado",
-  image: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&h=600&fit=crop"
-}, {
-  id: 6,
-  title: "Logo - Cafeteria Artesanal",
-  category: "identidade",
-  description: "Marca completa para cafeteria com conceito artesanal",
-  image: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=800&h=600&fit=crop"
-}];
+// Icon mapping for portfolio categories
+const categoryIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Palette,
+  Printer,
+  Video,
+  Globe,
+  PenTool,
+  Star,
+};
 const testimonials = [{
   id: 1,
   name: "Maria Silva",
@@ -449,7 +402,7 @@ const Index = () => {
   } = useToast();
   const [activeServiceTab, setActiveServiceTab] = useState("digital");
   const [activePortfolioCategory, setActivePortfolioCategory] = useState("all");
-  const [hoveredPortfolioItem, setHoveredPortfolioItem] = useState<number | null>(null);
+  const [hoveredPortfolioItem, setHoveredPortfolioItem] = useState<string | null>(null);
   const [currentTestimonialSlide, setCurrentTestimonialSlide] = useState(0);
   const [formData, setFormData] = useState({
     name: "",
@@ -459,10 +412,63 @@ const Index = () => {
     message: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Portfolio data from Supabase
+  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+  const [portfolioCategories, setPortfolioCategories] = useState<PortfolioCategory[]>([]);
+  const [isLoadingPortfolio, setIsLoadingPortfolio] = useState(true);
+
+  // Fetch portfolio data from Supabase
+  useEffect(() => {
+    const fetchPortfolioData = async () => {
+      setIsLoadingPortfolio(true);
+      
+      // Fetch categories
+      const { data: categoriesData } = await supabase
+        .from('portfolio_categories')
+        .select('*')
+        .order('display_order');
+      
+      // Fetch items with category info
+      const { data: itemsData } = await supabase
+        .from('portfolio_items')
+        .select(`
+          id,
+          title,
+          description,
+          image_url,
+          external_link,
+          category_id,
+          portfolio_categories (slug)
+        `)
+        .order('display_order');
+
+      if (categoriesData) {
+        setPortfolioCategories(categoriesData);
+      }
+      
+      if (itemsData) {
+        const mappedItems = itemsData.map(item => ({
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          image_url: item.image_url,
+          external_link: item.external_link,
+          category_slug: item.portfolio_categories?.slug || null,
+        }));
+        setPortfolioItems(mappedItems);
+      }
+      
+      setIsLoadingPortfolio(false);
+    };
+
+    fetchPortfolioData();
+  }, []);
+
   const testimonialsPerPage = 3;
   const totalTestimonialSlides = Math.ceil(testimonials.length / testimonialsPerPage);
   const currentTestimonials = testimonials.slice(currentTestimonialSlide * testimonialsPerPage, (currentTestimonialSlide + 1) * testimonialsPerPage);
-  const filteredPortfolioItems = activePortfolioCategory === "all" ? portfolioItems : portfolioItems.filter(item => item.category === activePortfolioCategory);
+  const filteredPortfolioItems = activePortfolioCategory === "all" ? portfolioItems : portfolioItems.filter(item => item.category_slug === activePortfolioCategory);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -934,40 +940,87 @@ const Index = () => {
         }} viewport={{
           once: true
         }} className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-8 sm:mb-12 px-2">
-            {portfolioCategories.map(category => <Button key={category.id} variant={activePortfolioCategory === category.id ? "default" : "outline"} size="sm" onClick={() => setActivePortfolioCategory(category.id)} className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-2 sm:px-3 py-1 sm:py-2 h-auto">
-                <category.icon className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden xs:inline">{category.name}</span>
-              </Button>)}
+            <Button 
+              key="all" 
+              variant={activePortfolioCategory === "all" ? "default" : "outline"} 
+              size="sm" 
+              onClick={() => setActivePortfolioCategory("all")} 
+              className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-2 sm:px-3 py-1 sm:py-2 h-auto"
+            >
+              <Star className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Todos</span>
+            </Button>
+            {portfolioCategories.map(category => {
+              const IconComponent = categoryIconMap[category.icon || 'Star'] || Star;
+              return (
+                <Button 
+                  key={category.id} 
+                  variant={activePortfolioCategory === category.slug ? "default" : "outline"} 
+                  size="sm" 
+                  onClick={() => setActivePortfolioCategory(category.slug)} 
+                  className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-2 sm:px-3 py-1 sm:py-2 h-auto"
+                >
+                  <IconComponent className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden xs:inline">{category.name}</span>
+                </Button>
+              );
+            })}
           </motion.div>
 
-          <motion.div layout className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-            {filteredPortfolioItems.map((item, index) => <motion.div key={item.id} layout initial={{
-            opacity: 0,
-            scale: 0.9
-          }} animate={{
-            opacity: 1,
-            scale: 1
-          }} exit={{
-            opacity: 0,
-            scale: 0.9
-          }} transition={{
-            delay: index * 0.1
-          }} className="group relative aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden cursor-pointer border-2 border-primary/30 hover:border-primary shadow-[0_0_15px_hsl(24_95%_53%/0.15)] hover:shadow-[0_0_30px_hsl(24_95%_53%/0.3)] transition-all duration-300" onMouseEnter={() => setHoveredPortfolioItem(item.id)} onMouseLeave={() => setHoveredPortfolioItem(null)}>
-                <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-                <div className="absolute inset-0 p-3 sm:p-6 flex flex-col justify-end">
-                  <span className="text-[10px] sm:text-xs font-display uppercase tracking-wider text-primary mb-1 sm:mb-2">
-                    {portfolioCategories.find(c => c.id === item.category)?.name}
-                  </span>
-                  <h3 className="font-display text-sm sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1">{item.title}</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 line-clamp-2">{item.description}</p>
-                  <Button variant="hero" size="sm" className="w-full text-xs flex items-center justify-center gap-1.5">
-                    <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-                    Ver Projeto
-                  </Button>
-                </div>
-              </motion.div>)}
-          </motion.div>
+          {isLoadingPortfolio ? (
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="aspect-[4/3] rounded-lg sm:rounded-xl bg-secondary animate-pulse" />
+              ))}
+            </div>
+          ) : filteredPortfolioItems.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">Nenhum projeto encontrado nesta categoria.</p>
+            </div>
+          ) : (
+            <motion.div layout className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+              {filteredPortfolioItems.map((item, index) => (
+                <motion.div 
+                  key={item.id} 
+                  layout 
+                  initial={{ opacity: 0, scale: 0.9 }} 
+                  animate={{ opacity: 1, scale: 1 }} 
+                  exit={{ opacity: 0, scale: 0.9 }} 
+                  transition={{ delay: index * 0.1 }} 
+                  className="group relative aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden cursor-pointer border-2 border-primary/30 hover:border-primary shadow-[0_0_15px_hsl(24_95%_53%/0.15)] hover:shadow-[0_0_30px_hsl(24_95%_53%/0.3)] transition-all duration-300" 
+                  onMouseEnter={() => setHoveredPortfolioItem(item.id)} 
+                  onMouseLeave={() => setHoveredPortfolioItem(null)}
+                >
+                  <img 
+                    src={item.image_url || 'https://images.unsplash.com/photo-1634942537034-2531766767d1?w=800&h=600&fit=crop'} 
+                    alt={item.title} 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                  <div className="absolute inset-0 p-3 sm:p-6 flex flex-col justify-end">
+                    <span className="text-[10px] sm:text-xs font-display uppercase tracking-wider text-primary mb-1 sm:mb-2">
+                      {portfolioCategories.find(c => c.slug === item.category_slug)?.name || 'Projeto'}
+                    </span>
+                    <h3 className="font-display text-sm sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1">{item.title}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 line-clamp-2">{item.description}</p>
+                    {item.external_link ? (
+                      <a href={item.external_link} target="_blank" rel="noopener noreferrer">
+                        <Button variant="hero" size="sm" className="w-full text-xs flex items-center justify-center gap-1.5">
+                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                          Ver Projeto
+                        </Button>
+                      </a>
+                    ) : (
+                      <Button variant="hero" size="sm" className="w-full text-xs flex items-center justify-center gap-1.5">
+                        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                        Ver Projeto
+                      </Button>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
 
           <motion.div initial={{
           opacity: 0
@@ -977,9 +1030,9 @@ const Index = () => {
           once: true
         }} className="mt-8 sm:mt-12 text-center">
             <div className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-primary/5 border border-primary/20">
-              <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
               <span className="text-xs sm:text-sm text-muted-foreground">
-                O portfólio completo será atualizado via banco de dados.
+                Portfólio atualizado dinamicamente
               </span>
             </div>
           </motion.div>
@@ -1070,7 +1123,7 @@ const Index = () => {
               subtitle="Em breve, vídeos com relatos reais de clientes satisfeitos" 
             />
             
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               {videoTestimonials.map((video, index) => (
                 <motion.div
                   key={video.id}
@@ -1079,7 +1132,7 @@ const Index = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.15 }}
                 >
-                  <NeonCard className="h-full aspect-video relative overflow-hidden group">
+                  <NeonCard className="h-full aspect-[9/16] relative overflow-hidden group">
                     {/* Placeholder background */}
                     <div className="absolute inset-0 bg-gradient-to-br from-secondary via-background to-secondary" />
                     
@@ -1096,26 +1149,26 @@ const Index = () => {
                     <div className="absolute inset-0 flex items-center justify-center">
                       <motion.div
                         whileHover={{ scale: 1.1 }}
-                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-primary/30 transition-all cursor-pointer"
+                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-primary/30 transition-all cursor-pointer"
                         style={{
                           boxShadow: "0 0 30px hsl(24 95% 53% / 0.3)"
                         }}
                       >
-                        <div className="w-0 h-0 border-l-[14px] sm:border-l-[16px] border-l-primary border-t-[8px] sm:border-t-[10px] border-t-transparent border-b-[8px] sm:border-b-[10px] border-b-transparent ml-1" />
+                        <div className="w-0 h-0 border-l-[12px] sm:border-l-[14px] border-l-primary border-t-[7px] sm:border-t-[8px] border-t-transparent border-b-[7px] sm:border-b-[8px] border-b-transparent ml-1" />
                       </motion.div>
                     </div>
                     
                     {/* "Em breve" badge */}
-                    <div className="absolute top-3 right-3 px-2 py-1 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-sm">
-                      <span className="text-[10px] sm:text-xs font-display uppercase tracking-wider text-primary">
+                    <div className="absolute top-2 right-2 px-2 py-1 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-sm">
+                      <span className="text-[9px] sm:text-[10px] font-display uppercase tracking-wider text-primary">
                         Em Breve
                       </span>
                     </div>
                     
                     {/* Title at bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 bg-gradient-to-t from-background/90 to-transparent">
-                      <p className="text-xs sm:text-sm font-medium text-foreground">{video.title}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Vídeo em produção</p>
+                    <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 bg-gradient-to-t from-background/90 to-transparent">
+                      <p className="text-[10px] sm:text-xs font-medium text-foreground line-clamp-2">{video.title}</p>
+                      <p className="text-[9px] sm:text-[10px] text-muted-foreground">Vídeo em produção</p>
                     </div>
                   </NeonCard>
                 </motion.div>
