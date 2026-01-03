@@ -7,6 +7,7 @@ interface NeonCardProps {
   className?: string;
   hoverEffect?: boolean;
   glowOnHover?: boolean;
+  onClick?: () => void;
 }
 
 export const NeonCard = ({
@@ -14,6 +15,7 @@ export const NeonCard = ({
   className,
   hoverEffect = true,
   glowOnHover = true,
+  onClick,
 }: NeonCardProps) => {
   return (
     <motion.div
@@ -22,9 +24,11 @@ export const NeonCard = ({
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
       whileHover={hoverEffect ? { y: -5 } : undefined}
+      onClick={onClick}
       className={cn(
         "relative group rounded-xl bg-card border border-border p-6 transition-all duration-300",
         glowOnHover && "hover:border-primary/50 hover:shadow-[0_0_30px_hsl(24_95%_53%/0.15)]",
+        onClick && "cursor-pointer",
         className
       )}
     >
