@@ -19,6 +19,7 @@ type PortfolioItem = {
   title: string;
   description: string | null;
   image_url: string | null;
+  video_url: string | null;
   external_link: string | null;
   category_slug: string | null;
 };
@@ -28,6 +29,15 @@ type PortfolioCategory = {
   name: string;
   slug: string;
   icon: string | null;
+};
+
+type VideoTestimonial = {
+  id: string;
+  title: string;
+  client_name: string | null;
+  client_role: string | null;
+  video_url: string | null;
+  thumbnail_url: string | null;
 };
 
 // ========== DATA ==========
@@ -377,12 +387,7 @@ const contactInfo = [{
   color: "text-primary"
 }];
 
-// Video testimonials placeholders
-const videoTestimonials = [
-  { id: 1, title: "Depoimento em Vídeo #1", placeholder: true },
-  { id: 2, title: "Depoimento em Vídeo #2", placeholder: true },
-  { id: 3, title: "Depoimento em Vídeo #3", placeholder: true },
-];
+// Video testimonials - now fetched from database
 const businessHours = [{
   day: "Segunda - Sexta",
   hours: "08:00 - 18:00"
@@ -417,6 +422,10 @@ const Index = () => {
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
   const [portfolioCategories, setPortfolioCategories] = useState<PortfolioCategory[]>([]);
   const [isLoadingPortfolio, setIsLoadingPortfolio] = useState(true);
+  
+  // Video testimonials from Supabase
+  const [videoTestimonials, setVideoTestimonials] = useState<VideoTestimonial[]>([]);
+  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
 
   // Fetch portfolio data from Supabase
   useEffect(() => {
@@ -437,6 +446,7 @@ const Index = () => {
           title,
           description,
           image_url,
+          video_url,
           external_link,
           category_id,
           portfolio_categories (slug)
@@ -453,6 +463,7 @@ const Index = () => {
           title: item.title,
           description: item.description,
           image_url: item.image_url,
+          video_url: item.video_url,
           external_link: item.external_link,
           category_slug: item.portfolio_categories?.slug || null,
         }));
@@ -463,6 +474,23 @@ const Index = () => {
     };
 
     fetchPortfolioData();
+  }, []);
+
+  // Fetch video testimonials from Supabase
+  useEffect(() => {
+    const fetchVideoTestimonials = async () => {
+      const { data } = await supabase
+        .from('video_testimonials')
+        .select('*')
+        .eq('is_published', true)
+        .order('display_order');
+
+      if (data) {
+        setVideoTestimonials(data);
+      }
+    };
+
+    fetchVideoTestimonials();
   }, []);
 
   const testimonialsPerPage = 3;
@@ -991,12 +1019,32 @@ const Index = () => {
                   onMouseEnter={() => setHoveredPortfolioItem(item.id)} 
                   onMouseLeave={() => setHoveredPortfolioItem(null)}
                 >
-                  <img 
-                    src={item.image_url || 'https://images.unsplash.com/photo-1634942537034-2531766767d1?w=800&h=600&fit=crop'} 
-                    alt={item.title} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                  />
+                  {item.video_url ? (
+                    <video 
+                      src={item.video_url}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      muted
+                      loop
+                      playsInline
+                      onMouseEnter={(e) => e.currentTarget.play()}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.pause();
+                        e.currentTarget.currentTime = 0;
+                      }}
+                    />
+                  ) : (
+                    <img 
+                      src={item.image_url || 'https://images.unsplash.com/photo-1634942537034-2531766767d1?w=800&h=600&fit=crop'} 
+                      alt={item.title} 
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                    />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                  {item.video_url && (
+                    <div className="absolute top-2 right-2 px-2 py-1 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-sm">
+                      <Play className="w-3 h-3 text-primary" />
+                    </div>
+                  )}
                   <div className="absolute inset-0 p-3 sm:p-6 flex flex-col justify-end">
                     <span className="text-[10px] sm:text-xs font-display uppercase tracking-wider text-primary mb-1 sm:mb-2">
                       {portfolioCategories.find(c => c.slug === item.category_slug)?.name || 'Projeto'}
@@ -1013,7 +1061,7 @@ const Index = () => {
                     ) : (
                       <Button variant="hero" size="sm" className="w-full text-xs flex items-center justify-center gap-1.5">
                         <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-                        Ver Projeto
+                        Ver Detalhes
                       </Button>
                     )}
                   </div>
@@ -1120,60 +1168,76 @@ const Index = () => {
             <SectionHeader 
               badge="Vídeos" 
               title="Depoimentos em Vídeo" 
-              subtitle="Em breve, vídeos com relatos reais de clientes satisfeitos" 
+              subtitle="Relatos reais de clientes satisfeitos" 
             />
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-              {videoTestimonials.map((video, index) => (
-                <motion.div
-                  key={video.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.15 }}
-                >
-                  <NeonCard className="h-full aspect-[9/16] relative overflow-hidden group">
-                    {/* Placeholder background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-secondary via-background to-secondary" />
-                    
-                    {/* Grid pattern overlay */}
-                    <div 
-                      className="absolute inset-0 opacity-10"
-                      style={{
-                        backgroundImage: "linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)",
-                        backgroundSize: "20px 20px"
-                      }}
-                    />
-                    
-                    {/* Play button */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <motion.div
-                        whileHover={{ scale: 1.1 }}
-                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-primary/30 transition-all cursor-pointer"
-                        style={{
-                          boxShadow: "0 0 30px hsl(24 95% 53% / 0.3)"
-                        }}
-                      >
-                        <div className="w-0 h-0 border-l-[12px] sm:border-l-[14px] border-l-primary border-t-[7px] sm:border-t-[8px] border-t-transparent border-b-[7px] sm:border-b-[8px] border-b-transparent ml-1" />
-                      </motion.div>
-                    </div>
-                    
-                    {/* "Em breve" badge */}
-                    <div className="absolute top-2 right-2 px-2 py-1 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-sm">
-                      <span className="text-[9px] sm:text-[10px] font-display uppercase tracking-wider text-primary">
-                        Em Breve
-                      </span>
-                    </div>
-                    
-                    {/* Title at bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 bg-gradient-to-t from-background/90 to-transparent">
-                      <p className="text-[10px] sm:text-xs font-medium text-foreground line-clamp-2">{video.title}</p>
-                      <p className="text-[9px] sm:text-[10px] text-muted-foreground">Vídeo em produção</p>
-                    </div>
-                  </NeonCard>
-                </motion.div>
-              ))}
-            </div>
+            {videoTestimonials.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Vídeos em breve...</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                {videoTestimonials.map((video, index) => (
+                  <motion.div
+                    key={video.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.15 }}
+                  >
+                    <NeonCard 
+                      className="h-full aspect-[9/16] relative overflow-hidden group cursor-pointer"
+                      onClick={() => setPlayingVideo(playingVideo === video.id ? null : video.id)}
+                    >
+                      {playingVideo === video.id ? (
+                        <video 
+                          src={video.video_url || ''}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          controls
+                          autoPlay
+                          playsInline
+                        />
+                      ) : (
+                        <>
+                          {/* Video thumbnail or first frame */}
+                          <video 
+                            src={video.video_url || ''}
+                            className="absolute inset-0 w-full h-full object-cover"
+                            muted
+                            playsInline
+                            preload="metadata"
+                          />
+                          
+                          {/* Overlay */}
+                          <div className="absolute inset-0 bg-background/30" />
+                          
+                          {/* Play button */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <motion.div
+                              whileHover={{ scale: 1.1 }}
+                              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-primary/30 transition-all"
+                              style={{
+                                boxShadow: "0 0 30px hsl(24 95% 53% / 0.3)"
+                              }}
+                            >
+                              <Play className="w-5 h-5 sm:w-6 sm:h-6 text-primary ml-1" />
+                            </motion.div>
+                          </div>
+                          
+                          {/* Title at bottom */}
+                          <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 bg-gradient-to-t from-background/90 to-transparent">
+                            <p className="text-[10px] sm:text-xs font-medium text-foreground line-clamp-2">{video.title}</p>
+                            {video.client_name && (
+                              <p className="text-[9px] sm:text-[10px] text-muted-foreground">{video.client_name}</p>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </NeonCard>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
