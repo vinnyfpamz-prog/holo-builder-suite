@@ -10,8 +10,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { FullscreenModal } from "@/components/ui/fullscreen-modal";
 import logo from "@/assets/logo.png";
 import vinnyPhoto from "@/assets/vinny-photo.png";
+import testimonialMale1 from "@/assets/testimonial-male-1.jpg";
+import testimonialFemale1 from "@/assets/testimonial-female-1.png";
+import testimonialFemale2 from "@/assets/testimonial-female-2.jpg";
 
 // Types for database items
 type PortfolioItem = {
@@ -330,42 +334,42 @@ const testimonials = [{
   role: "Empresária - Loja de Roupas",
   content: "O Vinny transformou completamente a identidade visual da minha loja. As artes para redes sociais aumentaram muito o engajamento. Super recomendo!",
   rating: 5,
-  image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop"
+  image: testimonialFemale1
 }, {
   id: 2,
   name: "João Pedro",
   role: "Dono de Restaurante",
   content: "Profissional excepcional! O cardápio digital e as artes para delivery ficaram perfeitas. Meus clientes sempre elogiam o visual.",
   rating: 5,
-  image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop"
+  image: testimonialMale1
 }, {
   id: 3,
   name: "Ana Carolina",
   role: "Influencer Digital",
   content: "Trabalho com o Vinny há mais de 1 ano. Ele entende exatamente o que preciso e sempre entrega no prazo. Meu feed nunca esteve tão bonito!",
   rating: 5,
-  image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop"
+  image: testimonialFemale2
 }, {
   id: 4,
   name: "Carlos Eduardo",
   role: "CEO - Startup de Tech",
   content: "A identidade visual da nossa startup ficou incrível. Logo, site, apresentações... tudo com uma qualidade impressionante!",
   rating: 5,
-  image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop"
+  image: testimonialMale1
 }, {
   id: 5,
   name: "Fernanda Lima",
   role: "Personal Trainer",
   content: "Os vídeos promocionais que o Vinny fez para minha academia trouxeram muitos alunos novos. Criatividade e qualidade!",
   rating: 5,
-  image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop"
+  image: testimonialFemale1
 }, {
   id: 6,
   name: "Roberto Alves",
   role: "Advogado",
   content: "Site institucional impecável e cartões de visita premium. A atenção aos detalhes é impressionante!",
   rating: 5,
-  image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop"
+  image: testimonialMale1
 }];
 const contactInfo = [{
   icon: MessageCircle,
@@ -426,6 +430,22 @@ const Index = () => {
   // Video testimonials from Supabase
   const [videoTestimonials, setVideoTestimonials] = useState<VideoTestimonial[]>([]);
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
+  
+  // Fullscreen modal state
+  const [fullscreenModal, setFullscreenModal] = useState<{
+    isOpen: boolean;
+    type: 'image' | 'video';
+    src: string;
+    title: string;
+  }>({ isOpen: false, type: 'image', src: '', title: '' });
+  
+  const openFullscreen = (type: 'image' | 'video', src: string, title: string) => {
+    setFullscreenModal({ isOpen: true, type, src, title });
+  };
+  
+  const closeFullscreen = () => {
+    setFullscreenModal({ ...fullscreenModal, isOpen: false });
+  };
 
   // Fetch portfolio data from Supabase
   useEffect(() => {
@@ -1018,6 +1038,15 @@ const Index = () => {
                   className="group relative aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden cursor-pointer border-2 border-primary/30 hover:border-primary shadow-[0_0_15px_hsl(24_95%_53%/0.15)] hover:shadow-[0_0_30px_hsl(24_95%_53%/0.3)] transition-all duration-300" 
                   onMouseEnter={() => setHoveredPortfolioItem(item.id)} 
                   onMouseLeave={() => setHoveredPortfolioItem(null)}
+                  onClick={() => {
+                    if (!item.external_link) {
+                      if (item.video_url) {
+                        openFullscreen('video', item.video_url, item.title);
+                      } else if (item.image_url) {
+                        openFullscreen('image', item.image_url, item.title);
+                      }
+                    }
+                  }}
                 >
                   {item.video_url ? (
                     <video 
@@ -1052,7 +1081,7 @@ const Index = () => {
                     <h3 className="font-display text-sm sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1">{item.title}</h3>
                     <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 line-clamp-2">{item.description}</p>
                     {item.external_link ? (
-                      <a href={item.external_link} target="_blank" rel="noopener noreferrer">
+                      <a href={item.external_link} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                         <Button variant="hero" size="sm" className="w-full text-xs flex items-center justify-center gap-1.5">
                           <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
                           Ver Projeto
@@ -1060,8 +1089,8 @@ const Index = () => {
                       </a>
                     ) : (
                       <Button variant="hero" size="sm" className="w-full text-xs flex items-center justify-center gap-1.5">
-                        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-                        Ver Detalhes
+                        <Play className="w-3 h-3 sm:w-4 sm:h-4" />
+                        Ver Tela Cheia
                       </Button>
                     )}
                   </div>
@@ -1437,6 +1466,15 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
+      
+      {/* Fullscreen Modal */}
+      <FullscreenModal
+        isOpen={fullscreenModal.isOpen}
+        onClose={closeFullscreen}
+        type={fullscreenModal.type}
+        src={fullscreenModal.src}
+        title={fullscreenModal.title}
+      />
     </>;
 };
 export default Index;
