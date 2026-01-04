@@ -16,6 +16,12 @@ import vinnyPhoto from "@/assets/vinny-photo.png";
 import testimonialMale1 from "@/assets/testimonial-male-1.jpg";
 import testimonialFemale1 from "@/assets/testimonial-female-1.png";
 import testimonialFemale2 from "@/assets/testimonial-female-2.jpg";
+import testimonialCeo from "@/assets/testimonial-ceo.jpg";
+import testimonialAdvogado from "@/assets/testimonial-advogado.jpg";
+import testimonialRestaurante from "@/assets/testimonial-restaurante.jpg";
+import testimonialFemale3 from "@/assets/testimonial-female-3.jpg";
+import testimonialMale2 from "@/assets/testimonial-male-2.jpg";
+import testimonialFemale4 from "@/assets/testimonial-female-4.jpg";
 
 // Types for database items
 type PortfolioItem = {
@@ -341,7 +347,7 @@ const testimonials = [{
   role: "Dono de Restaurante",
   content: "Profissional excepcional! O cardápio digital e as artes para delivery ficaram perfeitas. Meus clientes sempre elogiam o visual.",
   rating: 5,
-  image: testimonialMale1
+  image: testimonialRestaurante
 }, {
   id: 3,
   name: "Ana Carolina",
@@ -355,21 +361,21 @@ const testimonials = [{
   role: "CEO - Startup de Tech",
   content: "A identidade visual da nossa startup ficou incrível. Logo, site, apresentações... tudo com uma qualidade impressionante!",
   rating: 5,
-  image: testimonialMale1
+  image: testimonialCeo
 }, {
   id: 5,
   name: "Fernanda Lima",
   role: "Personal Trainer",
   content: "Os vídeos promocionais que o Vinny fez para minha academia trouxeram muitos alunos novos. Criatividade e qualidade!",
   rating: 5,
-  image: testimonialFemale1
+  image: testimonialFemale3
 }, {
   id: 6,
   name: "Roberto Alves",
   role: "Advogado",
   content: "Site institucional impecável e cartões de visita premium. A atenção aos detalhes é impressionante!",
   rating: 5,
-  image: testimonialMale1
+  image: testimonialAdvogado
 }];
 const contactInfo = [{
   icon: MessageCircle,
