@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowRight, Palette, Video, Globe, Printer, FileText, Sparkles, Star, ChevronRight, User, Target, Heart, Lightbulb, Rocket, CheckCircle, Zap, Code, Image, Share2, Megaphone, PenTool, Monitor, Smartphone, Film, Layout, Search, FileCheck, FolderOpen, ExternalLink, Filter, Quote, ChevronLeft, MessageCircle, Instagram, Mail, MapPin, Phone, Send, Clock, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/section-header";
@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { FullscreenModal } from "@/components/ui/fullscreen-modal";
+import { useAudio } from "@/contexts/AudioContext";
 import logo from "@/assets/logo.png";
 import vinnyPhoto from "@/assets/vinny-photo.png";
 import testimonialMale1 from "@/assets/testimonial-male-1.jpg";
@@ -399,6 +400,7 @@ const Index = () => {
   const {
     toast
   } = useToast();
+  const { playClickSound, playHoverSound, playSuccessSound, lowerVolumeTemporarily, restoreVolume } = useAudio();
   const [activeServiceTab, setActiveServiceTab] = useState("digital");
   const [activePortfolioCategory, setActivePortfolioCategory] = useState("all");
   const [hoveredPortfolioItem, setHoveredPortfolioItem] = useState<string | null>(null);
@@ -411,6 +413,7 @@ const Index = () => {
     message: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
   
   // Portfolio data from Supabase
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
@@ -431,10 +434,15 @@ const Index = () => {
   
   const openFullscreen = (type: 'image' | 'video', src: string, title: string) => {
     setFullscreenModal({ isOpen: true, type, src, title });
+    playClickSound();
+    if (type === 'video') {
+      lowerVolumeTemporarily();
+    }
   };
   
   const closeFullscreen = () => {
     setFullscreenModal({ ...fullscreenModal, isOpen: false });
+    restoreVolume();
   };
 
   // Fetch portfolio data from Supabase
@@ -507,22 +515,53 @@ const Index = () => {
   const totalTestimonialSlides = Math.ceil(testimonials.length / testimonialsPerPage);
   const currentTestimonials = testimonials.slice(currentTestimonialSlide * testimonialsPerPage, (currentTestimonialSlide + 1) * testimonialsPerPage);
   const filteredPortfolioItems = activePortfolioCategory === "all" ? portfolioItems : portfolioItems.filter(item => item.category_slug === activePortfolioCategory);
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    toast({
-      title: "Mensagem enviada!",
-      description: "Entrarei em contato em breve. Obrigado pelo interesse!"
-    });
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: ""
-    });
-    setIsSubmitting(false);
+    
+    try {
+      const response = await fetch('https://formsubmit.co/ajax/vinnyfpamz@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+          _subject: `Nova mensagem do site: ${formData.subject}`,
+        })
+      });
+      
+      if (response.ok) {
+        playSuccessSound();
+        toast({
+          title: "Mensagem enviada!",
+          description: "Entrarei em contato em breve. Obrigado pelo interesse!"
+        });
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: ""
+        });
+      } else {
+        throw new Error('Erro ao enviar');
+      }
+    } catch (error) {
+      toast({
+        title: "Erro ao enviar",
+        description: "Por favor, tente novamente ou entre em contato pelo WhatsApp.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   return <>
       {/* ========== HERO SECTION ========== */}

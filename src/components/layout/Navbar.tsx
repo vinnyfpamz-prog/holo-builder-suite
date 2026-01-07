@@ -2,21 +2,26 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LanguageToggle } from "@/components/ui/language-toggle";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useAudio } from "@/contexts/AudioContext";
 import logo from "@/assets/logo.png";
-
-const navLinks = [
-  { name: "Home", href: "#home" },
-  { name: "Sobre", href: "#sobre" },
-  { name: "Serviços", href: "#servicos" },
-  { name: "Portfólio", href: "#portfolio" },
-  { name: "Depoimentos", href: "#depoimentos" },
-  { name: "Contato", href: "#contato" },
-];
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const { t } = useLanguage();
+  const { playClickSound, playHoverSound } = useAudio();
+
+  const navLinks = [
+    { name: t('nav.home'), href: "#home" },
+    { name: t('nav.about'), href: "#sobre" },
+    { name: t('nav.services'), href: "#servicos" },
+    { name: t('nav.portfolio'), href: "#portfolio" },
+    { name: t('nav.testimonials'), href: "#depoimentos" },
+    { name: t('nav.contact'), href: "#contato" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,9 +43,10 @@ export const Navbar = () => {
     
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [navLinks]);
 
   const scrollToSection = (href: string) => {
+    playClickSound();
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
@@ -62,7 +68,11 @@ export const Navbar = () => {
       <nav className="container mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <button onClick={() => scrollToSection("#home")} className="relative z-10">
+          <button 
+            onClick={() => scrollToSection("#home")} 
+            className="relative z-10"
+            onMouseEnter={playHoverSound}
+          >
             <motion.img
               src={logo}
               alt="Vinny Artz"
@@ -78,6 +88,7 @@ export const Navbar = () => {
               <button
                 key={link.href}
                 onClick={() => scrollToSection(link.href)}
+                onMouseEnter={playHoverSound}
                 className={`relative px-4 py-2 font-display text-sm uppercase tracking-wider transition-colors duration-300 ${
                   activeSection === link.href.replace("#", "")
                     ? "text-primary"
@@ -98,9 +109,16 @@ export const Navbar = () => {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden lg:block">
-            <Button variant="hero" size="default" asChild>
+          {/* Language Toggle & CTA Button */}
+          <div className="hidden lg:flex items-center gap-3">
+            <LanguageToggle />
+            <Button 
+              variant="hero" 
+              size="default" 
+              asChild
+              onClick={playClickSound}
+              onMouseEnter={playHoverSound}
+            >
               <a
                 href="https://wa.me/5594991022124"
                 target="_blank"
@@ -115,7 +133,10 @@ export const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <button
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => {
+              playClickSound();
+              setIsOpen(!isOpen);
+            }}
             className="lg:hidden relative z-10 p-2 text-foreground"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -135,6 +156,11 @@ export const Navbar = () => {
           >
             <div className="container mx-auto px-4 py-6">
               <div className="flex flex-col gap-4">
+                {/* Language toggle for mobile */}
+                <div className="flex justify-center mb-2">
+                  <LanguageToggle />
+                </div>
+                
                 {navLinks.map((link, index) => (
                   <motion.div
                     key={link.href}
@@ -160,7 +186,7 @@ export const Navbar = () => {
                   transition={{ delay: navLinks.length * 0.05 }}
                   className="pt-4"
                 >
-                  <Button variant="hero" className="w-full" asChild>
+                  <Button variant="hero" className="w-full" asChild onClick={playClickSound}>
                     <a
                       href="https://wa.me/5594991022124"
                       target="_blank"
