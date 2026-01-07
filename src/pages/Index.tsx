@@ -4,7 +4,7 @@ import { ArrowRight, Palette, Video, Globe, Printer, FileText, Sparkles, Star, C
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/section-header";
 import { NeonCard } from "@/components/ui/neon-card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import FaqSection from "@/components/sections/FaqSection";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -180,31 +180,6 @@ const processSteps = [{
   icon: CheckCircle,
   title: "Entrega",
   description: "Arquivos finais em todos os formatos necessários, prontos para uso imediato."
-}];
-const faqs = [{
-  question: "Qual é o prazo médio de entrega?",
-  answer: "O prazo varia conforme a complexidade do projeto. Para artes simples como posts e stories, a entrega é feita em 24 a 48 horas. Já projetos mais elaborados, como identidades visuais completas, podem levar de 5 a 15 dias úteis. Sempre informo uma estimativa precisa antes de iniciar o trabalho."
-}, {
-  question: "Como funciona o processo de pagamento?",
-  answer: "Trabalho com 50% de entrada para iniciar o projeto e 50% na entrega final aprovada. Aceito PIX (pagamento instantâneo), transferência bancária e cartão de crédito em até 3x sem juros. Para projetos maiores, podemos negociar condições especiais de parcelamento."
-}, {
-  question: "Quantas revisões estão incluídas?",
-  answer: "Cada projeto inclui até 3 rodadas de revisões sem custo adicional. Isso garante que o resultado final fique exatamente como você imaginou. Caso precise de ajustes extras além dessas 3 rodadas, podemos negociar um valor adicional de acordo com as alterações solicitadas."
-}, {
-  question: "Você trabalha com urgências?",
-  answer: "Sim, atendo projetos urgentes! Para entregas expressas, aplico uma taxa adicional que varia de 30% a 50% dependendo da complexidade e do prazo desejado. Quanto mais apertado o prazo, maior a taxa. Entre em contato pelo WhatsApp para verificar disponibilidade e valores para seu projeto urgente."
-}, {
-  question: "Você faz identidade visual completa?",
-  answer: "Sim! Ofereço pacotes completos de identidade visual que incluem: criação de logotipo com variações (colorido, monocromático, versão para fundos escuros), definição da paleta de cores, escolha da tipografia institucional, criação de elementos visuais complementares e um manual de marca digital com todas as aplicações e regras de uso."
-}, {
-  question: "Como é o processo de criação?",
-  answer: "O processo segue 4 etapas: 1) Briefing - conversamos sobre suas necessidades, referências e objetivos; 2) Criação - desenvolvo as primeiras propostas criativas; 3) Refinamento - fazemos os ajustes baseados no seu feedback; 4) Entrega - você recebe os arquivos finais em todos os formatos necessários (PNG, JPG, PDF, arquivos editáveis quando aplicável)."
-}, {
-  question: "Você atende fora de Parauapebas?",
-  answer: "Com certeza! Atendo clientes de todo o Brasil de forma remota. Todo o processo é feito online: briefing por chamada de vídeo ou WhatsApp, envio de propostas por e-mail, revisões digitais e entrega dos arquivos pela nuvem. A distância não é impedimento para entregarmos um trabalho de excelência!"
-}, {
-  question: "Quais formatos de arquivo você entrega?",
-  answer: "Entrego os arquivos nos formatos mais adequados para cada tipo de uso: PNG e JPG para redes sociais e web, PDF para impressão, arquivos vetoriais (CDR, AI, SVG) quando contratado, e arquivos editáveis do Canva quando aplicável. Sempre pergunto sobre suas necessidades específicas para garantir que você tenha tudo o que precisa."
 }];
 const serviceCategories = [{
   id: "digital",
@@ -866,29 +841,7 @@ const Index = () => {
           </div>
 
           {/* FAQ */}
-          <div>
-            <SectionHeader badge="FAQ" title="Perguntas Frequentes" subtitle="Respostas para as dúvidas mais comuns" />
-            <motion.div initial={{
-            opacity: 0,
-            y: 20
-          }} whileInView={{
-            opacity: 1,
-            y: 0
-          }} viewport={{
-            once: true
-          }} className="max-w-3xl mx-auto">
-              <Accordion type="single" collapsible className="space-y-3 sm:space-y-4">
-                {faqs.map((faq, index) => <AccordionItem key={index} value={`item-${index}`} className="bg-card border border-border rounded-lg px-4 sm:px-6 data-[state=open]:border-primary/50">
-                    <AccordionTrigger className="font-display text-left hover:text-primary text-sm sm:text-base py-3 sm:py-4">
-                      {faq.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground text-sm sm:text-base pb-3 sm:pb-4">
-                      {faq.answer}
-                    </AccordionContent>
-                  </AccordionItem>)}
-              </Accordion>
-            </motion.div>
-          </div>
+          <FaqSection />
         </div>
       </section>
 
