@@ -4,6 +4,7 @@ interface AudioContextType {
   isMusicPlaying: boolean;
   isMuted: boolean;
   volume: number;
+  isLoading: boolean;
   toggleMusic: () => void;
   toggleMute: () => void;
   setVolume: (volume: number) => void;
@@ -34,7 +35,7 @@ const getAudioContext = () => {
   return audioContext;
 };
 
-// Generate click sound
+// Generate click sound - futuristic beep
 const playTone = (frequency: number, duration: number, volume: number, type: OscillatorType = 'sine') => {
   try {
     const ctx = getAudioContext();
@@ -51,7 +52,7 @@ const playTone = (frequency: number, duration: number, volume: number, type: Osc
     oscillator.type = type;
     oscillator.frequency.setValueAtTime(frequency, ctx.currentTime);
     
-    gainNode.gain.setValueAtTime(volume * 0.1, ctx.currentTime);
+    gainNode.gain.setValueAtTime(volume * 0.08, ctx.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
     
     oscillator.start(ctx.currentTime);
@@ -61,22 +62,57 @@ const playTone = (frequency: number, duration: number, volume: number, type: Osc
   }
 };
 
+// Ambient music URLs - calm futuristic ambient tracks
+const AMBIENT_TRACKS = [
+  'https://cdn.pixabay.com/audio/2022/10/25/audio_946bc8c592.mp3', // Ambient relaxing
+  'https://cdn.pixabay.com/audio/2022/03/10/audio_6c4fae7d4e.mp3', // Electronic ambient
+  'https://cdn.pixabay.com/audio/2024/02/14/audio_8e65e3c1c5.mp3', // Calm lofi
+];
+
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolumeState] = useState(0.3);
-  const [previousVolume, setPreviousVolume] = useState(0.3);
+  const [volume, setVolumeState] = useState(0.25);
+  const [previousVolume, setPreviousVolume] = useState(0.25);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initialize background music
+  // Initialize background music with multiple fallback tracks
   useEffect(() => {
-    // Create audio element for ambient music
     const audio = new Audio();
-    // Use a royalty-free ambient electronic track URL
-    audio.src = 'https://cdn.pixabay.com/audio/2024/11/29/audio_d93c2ad31e.mp3';
     audio.loop = true;
     audio.volume = volume;
+    audio.crossOrigin = 'anonymous';
+    audio.preload = 'auto';
+    
+    // Try to load the first track
+    audio.src = AMBIENT_TRACKS[currentTrackIndex];
+    
+    // Handle errors - try next track
+    audio.onerror = () => {
+      console.warn('Track failed to load, trying next...');
+      if (currentTrackIndex < AMBIENT_TRACKS.length - 1) {
+        setCurrentTrackIndex(prev => prev + 1);
+        audio.src = AMBIENT_TRACKS[currentTrackIndex + 1];
+      }
+      setIsLoading(false);
+    };
+    
+    audio.oncanplaythrough = () => {
+      setIsLoading(false);
+    };
+    
+    audio.onwaiting = () => {
+      setIsLoading(true);
+    };
+    
+    audio.onplaying = () => {
+      setIsLoading(false);
+      setIsMusicPlaying(true);
+    };
+    
     audioRef.current = audio;
     
     return () => {
@@ -86,6 +122,16 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
     };
   }, []);
+
+  // Update source when track index changes
+  useEffect(() => {
+    if (audioRef.current && currentTrackIndex > 0) {
+      audioRef.current.src = AMBIENT_TRACKS[currentTrackIndex];
+      if (isMusicPlaying) {
+        audioRef.current.play().catch(console.warn);
+      }
+    }
+  }, [currentTrackIndex]);
 
   // Update volume when it changes
   useEffect(() => {
@@ -99,11 +145,24 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     
     if (isMusicPlaying) {
       audioRef.current.pause();
+      setIsMusicPlaying(false);
     } else {
-      audioRef.current.play().catch(e => console.warn('Playback failed:', e));
+      setIsLoading(true);
+      audioRef.current.play()
+        .then(() => {
+          setIsMusicPlaying(true);
+          setIsLoading(false);
+        })
+        .catch(e => {
+          console.warn('Playback failed:', e);
+          setIsLoading(false);
+          // Try next track on error
+          if (currentTrackIndex < AMBIENT_TRACKS.length - 1) {
+            setCurrentTrackIndex(prev => prev + 1);
+          }
+        });
     }
-    setIsMusicPlaying(!isMusicPlaying);
-  }, [isMusicPlaying]);
+  }, [isMusicPlaying, currentTrackIndex]);
 
   const toggleMute = useCallback(() => {
     setIsMuted(!isMuted);
@@ -117,7 +176,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const lowerVolumeTemporarily = useCallback(() => {
     if (audioRef.current && isMusicPlaying) {
       setPreviousVolume(volume);
-      setVolumeState(volume * 0.2);
+      setVolumeState(volume * 0.15);
     }
   }, [volume, isMusicPlaying]);
 
@@ -127,22 +186,28 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [previousVolume, isMusicPlaying]);
 
+  // Futuristic click sound
   const playClickSound = useCallback(() => {
     if (isMuted) return;
-    playTone(800, 0.08, volume, 'sine');
-    setTimeout(() => playTone(1200, 0.05, volume * 0.6, 'sine'), 30);
+    // Rising double beep
+    playTone(600, 0.06, volume, 'sine');
+    setTimeout(() => playTone(900, 0.08, volume * 0.8, 'sine'), 40);
+    setTimeout(() => playTone(1200, 0.04, volume * 0.4, 'sine'), 80);
   }, [isMuted, volume]);
 
+  // Soft hover sound
   const playHoverSound = useCallback(() => {
     if (isMuted) return;
-    playTone(600, 0.04, volume * 0.3, 'sine');
+    playTone(500, 0.03, volume * 0.2, 'sine');
   }, [isMuted, volume]);
 
+  // Success sound - ascending arpeggio
   const playSuccessSound = useCallback(() => {
     if (isMuted) return;
-    playTone(523, 0.1, volume, 'sine');
-    setTimeout(() => playTone(659, 0.1, volume, 'sine'), 100);
-    setTimeout(() => playTone(784, 0.15, volume, 'sine'), 200);
+    playTone(523, 0.08, volume, 'sine');
+    setTimeout(() => playTone(659, 0.08, volume * 0.9, 'sine'), 80);
+    setTimeout(() => playTone(784, 0.1, volume * 0.8, 'sine'), 160);
+    setTimeout(() => playTone(1047, 0.15, volume * 0.7, 'sine'), 250);
   }, [isMuted, volume]);
 
   return (
@@ -150,6 +215,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       isMusicPlaying,
       isMuted,
       volume,
+      isLoading,
       toggleMusic,
       toggleMute,
       setVolume,
