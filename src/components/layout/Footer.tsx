@@ -1,25 +1,28 @@
 import { motion } from "framer-motion";
 import { Instagram, MessageCircle, Mail, MapPin } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import logo from "@/assets/logo.png";
 
-const quickLinks = [
-  { name: "Home", href: "#home" },
-  { name: "Sobre", href: "#sobre" },
-  { name: "Serviços", href: "#servicos" },
-  { name: "Portfólio", href: "#portfolio" },
-  { name: "Depoimentos", href: "#depoimentos" },
-  { name: "Contato", href: "#contato" },
-];
-
-const services = [
-  "Design Digital",
-  "Impressos",
-  "Edição de Vídeo",
-  "Web e Landing Pages",
-  "Soluções Digitais",
-];
-
 export const Footer = () => {
+  const { t } = useLanguage();
+  
+  const quickLinks = [
+    { name: t('nav.home'), href: "#home" },
+    { name: t('nav.about'), href: "#sobre" },
+    { name: t('nav.services'), href: "#servicos" },
+    { name: t('nav.portfolio'), href: "#portfolio" },
+    { name: t('nav.testimonials'), href: "#depoimentos" },
+    { name: t('nav.contact'), href: "#contato" },
+  ];
+
+  const services = [
+    t('services.digital.title'),
+    t('services.print.title'),
+    t('services.video.title'),
+    t('services.web.title'),
+    t('services.solutions.title'),
+  ];
+
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
@@ -45,8 +48,7 @@ export const Footer = () => {
               <img src={logo} alt="Vinny Artz" className="h-12 w-auto mb-6" />
             </button>
             <p className="text-muted-foreground leading-relaxed mb-6">
-              Transformando ideias em experiências visuais impactantes. Design gráfico, 
-              vídeos, web e muito mais.
+              {t('hero.description')}
             </p>
             <div className="flex gap-4">
               <a
@@ -76,7 +78,7 @@ export const Footer = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <h4 className="font-display text-lg uppercase tracking-wider text-foreground mb-6">
-              Links Rápidos
+              {t('nav.home')}
             </h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
@@ -100,11 +102,11 @@ export const Footer = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <h4 className="font-display text-lg uppercase tracking-wider text-foreground mb-6">
-              Serviços
+              {t('nav.services')}
             </h4>
             <ul className="space-y-3">
-              {services.map((service) => (
-                <li key={service}>
+              {services.map((service, index) => (
+                <li key={index}>
                   <button
                     onClick={() => scrollToSection("#servicos")}
                     className="text-muted-foreground hover:text-primary transition-colors duration-300 link-underline"
@@ -124,7 +126,7 @@ export const Footer = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <h4 className="font-display text-lg uppercase tracking-wider text-foreground mb-6">
-              Contato
+              {t('nav.contact')}
             </h4>
             <ul className="space-y-4">
               <li className="flex items-center gap-3 text-muted-foreground">
@@ -151,7 +153,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-3 text-muted-foreground">
                 <Mail className="w-5 h-5 text-primary" />
-                <span>contato@vinnyartz.com</span>
+                <span>vinnyfpamz@gmail.com</span>
               </li>
               <li className="flex items-start gap-3 text-muted-foreground">
                 <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
@@ -165,11 +167,11 @@ export const Footer = () => {
         <div className="mt-16 pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-muted-foreground text-sm">
-              © {new Date().getFullYear()} Vinny Artz. Todos os direitos reservados.
+              © {new Date().getFullYear()} Vinny Artz. {t('footer.rights')}.
             </p>
             <p className="text-muted-foreground text-sm">
-              Desenvolvido com{" "}
-              <span className="text-primary animate-glow-text">♥</span> por{" "}
+              {t('footer.madeWith')}{" "}
+              <span className="text-primary animate-glow-text">♥</span> {t('footer.by')}{" "}
               <span className="text-primary font-display">Vinny Artz</span>
             </p>
           </div>
