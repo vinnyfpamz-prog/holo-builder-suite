@@ -517,52 +517,9 @@ const Index = () => {
   const currentTestimonials = testimonials.slice(currentTestimonialSlide * testimonialsPerPage, (currentTestimonialSlide + 1) * testimonialsPerPage);
   const filteredPortfolioItems = activePortfolioCategory === "all" ? portfolioItems : portfolioItems.filter(item => item.category_slug === activePortfolioCategory);
   
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    try {
-      const response = await fetch('https://formsubmit.co/ajax/vinnyfpamz@gmail.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          subject: formData.subject,
-          message: formData.message,
-          _subject: `Nova mensagem do site: ${formData.subject}`,
-        })
-      });
-      
-      if (response.ok) {
-        playSuccessSound();
-        toast({
-          title: "Mensagem enviada!",
-          description: "Entrarei em contato em breve. Obrigado pelo interesse!"
-        });
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          subject: "",
-          message: ""
-        });
-      } else {
-        throw new Error('Erro ao enviar');
-      }
-    } catch (error) {
-      toast({
-        title: "Erro ao enviar",
-        description: "Por favor, tente novamente ou entre em contato pelo WhatsApp.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+  // FormSubmit uses standard HTML form submission
+  const handleFormInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
   return <>
       {/* ========== HERO SECTION ========== */}
@@ -593,7 +550,7 @@ const Index = () => {
             }} className="flex items-center justify-center lg:justify-start gap-2 mb-4 sm:mb-6 flex-wrap">
                 <img src={logo} alt="Vinny Artz" className="h-8 sm:h-10" />
                 <span className="px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-display uppercase tracking-wider text-primary border border-primary/30 rounded-full bg-primary/5 whitespace-nowrap">
-                  Designer Gráfico
+                  {t('hero.badge')}
                 </span>
               </motion.div>
 
@@ -619,7 +576,7 @@ const Index = () => {
             }} transition={{
               delay: 0.4
             }} className="text-base sm:text-lg md:text-xl text-muted-foreground mb-3 sm:mb-4">
-                Designer Gráfico e Criativo Multimídia
+                {t('hero.subtitle')}
               </motion.p>
 
               <motion.p initial={{
@@ -631,9 +588,7 @@ const Index = () => {
             }} transition={{
               delay: 0.5
             }} className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-lg mx-auto lg:mx-0 px-2 sm:px-0">
-                Transformo ideias em experiências visuais impactantes. 
-                Artes digitais, vídeos, impressos, web e tecnologia visual 
-                para elevar sua marca ao próximo nível.
+                {t('hero.description')}
               </motion.p>
 
               <motion.div initial={{
@@ -736,7 +691,7 @@ const Index = () => {
       }} />
         
         <div className="container mx-auto px-4 sm:px-6 md:px-8">
-          <SectionHeader badge="Sobre" title="Quem Sou Eu" subtitle="Designer gráfico apaixonado por criar experiências visuais que contam histórias" />
+          <SectionHeader badge={t('about.badge')} title={t('about.title')} subtitle={t('about.subtitle')} />
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16 sm:mb-20">
             <motion.div initial={{
@@ -749,13 +704,10 @@ const Index = () => {
             once: true
           }}>
               <p className="text-base sm:text-lg text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
-                Com mais de 6 anos de experiência no mercado, já ajudei centenas de clientes 
-                a transformar suas ideias em realidade. Minha jornada começou em 2020 por curiosidade 
-                e se transformou em uma carreira dedicada a entregar excelência em cada projeto.
+                {t('about.p1')}
               </p>
               <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
-                Acredito que o bom design é aquele que resolve problemas de forma elegante e impactante. 
-                Cada pixel, cada cor, cada elemento tem um propósito: comunicar, conectar e converter.
+                {t('about.p2')}
               </p>
               <NeonCtaButton href="https://wa.me/5594991022124" size="lg" className="w-full sm:w-auto">
                 <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -788,7 +740,7 @@ const Index = () => {
 
           {/* Timeline */}
           <div className="mb-16 sm:mb-20">
-            <SectionHeader badge="Trajetória" title="Minha Jornada" subtitle="Uma linha do tempo das principais conquistas e evoluções" />
+            <SectionHeader badge={t('timeline.badge')} title={t('timeline.title')} subtitle={t('timeline.subtitle')} />
             <div className="relative max-w-3xl mx-auto">
               <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-px" />
               {timeline.map((item, index) => <motion.div key={item.year} initial={{
@@ -812,7 +764,7 @@ const Index = () => {
 
           {/* Skills */}
           <div className="mb-16 sm:mb-20">
-            <SectionHeader badge="Habilidades" title="Minhas Ferramentas" subtitle="As principais tecnologias e softwares que domino" />
+            <SectionHeader badge={t('skills.badge')} title={t('skills.title')} subtitle={t('skills.subtitle')} />
             <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
               {skills.map((skill, index) => <motion.div key={skill.name} initial={{
               opacity: 0,
@@ -849,7 +801,7 @@ const Index = () => {
 
           {/* Process */}
           <div className="mb-16 sm:mb-20">
-            <SectionHeader badge="Processo" title="Como Trabalho" subtitle="Um processo estruturado para garantir qualidade e sua satisfação" />
+            <SectionHeader badge={t('process.badge')} title={t('process.title')} subtitle={t('process.subtitle')} />
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
               {processSteps.map((step, index) => <motion.div key={step.step} initial={{
               opacity: 0,
@@ -883,7 +835,7 @@ const Index = () => {
       {/* ========== SERVICES SECTION ========== */}
       <section id="servicos" className="section-padding bg-secondary/20">
         <div className="container mx-auto px-4 sm:px-6 md:px-8">
-          <SectionHeader badge="Serviços" title="O Que Eu Faço" subtitle="Soluções criativas completas para transformar sua presença visual e digital" />
+          <SectionHeader badge={t('services.badge')} title={t('services.title')} subtitle={t('services.subtitle')} />
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-8 sm:mb-12">
             {services.map((service, index) => <motion.div key={service.title} initial={{
@@ -980,7 +932,7 @@ const Index = () => {
       {/* ========== PORTFOLIO SECTION ========== */}
       <section id="portfolio" className="section-padding">
         <div className="container mx-auto px-4 sm:px-6 md:px-8">
-          <SectionHeader badge="Portfólio" title="Meus Trabalhos" subtitle="Uma seleção dos projetos que tive o prazer de desenvolver" />
+          <SectionHeader badge={t('portfolio.badge')} title={t('portfolio.title')} subtitle={t('portfolio.subtitle')} />
 
           <motion.div initial={{
           opacity: 0,
@@ -999,7 +951,7 @@ const Index = () => {
               className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-2 sm:px-3 py-1 sm:py-2 h-auto"
             >
               <Star className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden xs:inline">Todos</span>
+              <span className="hidden xs:inline">{t('portfolio.all')}</span>
             </Button>
             {portfolioCategories.map(category => {
               const IconComponent = categoryIconMap[category.icon || 'Star'] || Star;
@@ -1026,7 +978,7 @@ const Index = () => {
             </div>
           ) : filteredPortfolioItems.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">Nenhum projeto encontrado nesta categoria.</p>
+              <p className="text-muted-foreground">{t('portfolio.empty')}</p>
             </div>
           ) : (
             <motion.div layout className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
@@ -1087,7 +1039,7 @@ const Index = () => {
                       <a href={item.external_link} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                         <Button variant="hero" size="sm" className="w-full text-xs flex items-center justify-center gap-1.5">
                           <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-                          Ver Projeto
+                          {t('portfolio.view')}
                         </Button>
                       </a>
                     ) : (
@@ -1122,7 +1074,7 @@ const Index = () => {
       {/* ========== TESTIMONIALS SECTION ========== */}
       <section id="depoimentos" className="section-padding bg-secondary/20">
         <div className="container mx-auto px-4 sm:px-6 md:px-8">
-          <SectionHeader badge="Depoimentos" title="O Que Dizem Meus Clientes" subtitle="A satisfação dos meus clientes é minha maior motivação" />
+          <SectionHeader badge={t('testimonials.badge')} title={t('testimonials.title')} subtitle={t('testimonials.subtitle')} />
 
           <div className="grid grid-cols-3 gap-3 sm:gap-4 max-w-2xl mx-auto mb-8 sm:mb-12">
             {[{
@@ -1198,14 +1150,14 @@ const Index = () => {
           {/* Video Testimonials Section */}
           <div className="mt-16 sm:mt-20">
             <SectionHeader 
-              badge="Vídeos" 
-              title="Depoimentos em Vídeo" 
-              subtitle="Relatos reais de clientes satisfeitos" 
+              badge={t('testimonials.video.badge')} 
+              title={t('testimonials.video.title')} 
+              subtitle={t('testimonials.video.subtitle')} 
             />
             
             {videoTestimonials.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-muted-foreground">Vídeos em breve...</p>
+                <p className="text-muted-foreground">{t('testimonials.video.soon')}</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -1277,7 +1229,7 @@ const Index = () => {
       {/* ========== CONTACT SECTION ========== */}
       <section id="contato" className="section-padding">
         <div className="container mx-auto px-4 sm:px-6 md:px-8">
-          <SectionHeader badge="Contato" title="Vamos Criar Algo Incrível Juntos?" subtitle="Estou pronto para transformar suas ideias em realidade" />
+          <SectionHeader badge={t('contact.badge')} title={t('contact.title')} subtitle={t('contact.subtitle')} />
 
           <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
             <div className="lg:col-span-2 space-y-6 sm:space-y-8">
@@ -1290,7 +1242,7 @@ const Index = () => {
             }} viewport={{
               once: true
             }}>
-                <h3 className="font-display text-lg sm:text-xl font-bold mb-4 sm:mb-6">Informações de Contato</h3>
+                <h3 className="font-display text-lg sm:text-xl font-bold mb-4 sm:mb-6">{t('contact.info')}</h3>
                 <div className="space-y-3 sm:space-y-4">
                   {contactInfo.map((info, index) => <motion.a key={info.label} href={info.link} target={info.link.startsWith("http") ? "_blank" : undefined} rel={info.link.startsWith("http") ? "noopener noreferrer" : undefined} initial={{
                   opacity: 0,
@@ -1327,13 +1279,21 @@ const Index = () => {
             }}>
                 <h3 className="font-display text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2">
                   <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                  Horário de Atendimento
+                  {t('contact.hours')}
                 </h3>
                 <div className="space-y-1.5 sm:space-y-2">
-                  {businessHours.map(item => <div key={item.day} className="flex justify-between text-xs sm:text-sm py-1.5 sm:py-2 border-b border-border last:border-0">
-                      <span className="text-muted-foreground">{item.day}</span>
-                      <span className="font-medium">{item.hours}</span>
-                    </div>)}
+                  <div className="flex justify-between text-xs sm:text-sm py-1.5 sm:py-2 border-b border-border">
+                    <span className="text-muted-foreground">{t('days.weekdays')}</span>
+                    <span className="font-medium">08:00 - 18:00</span>
+                  </div>
+                  <div className="flex justify-between text-xs sm:text-sm py-1.5 sm:py-2 border-b border-border">
+                    <span className="text-muted-foreground">{t('days.saturday')}</span>
+                    <span className="font-medium">09:00 - 14:00</span>
+                  </div>
+                  <div className="flex justify-between text-xs sm:text-sm py-1.5 sm:py-2 border-b border-border last:border-0">
+                    <span className="text-muted-foreground">{t('days.sunday')}</span>
+                    <span className="font-medium">{t('days.closed')}</span>
+                  </div>
                 </div>
               </motion.div>
 
@@ -1348,9 +1308,9 @@ const Index = () => {
             }} transition={{
               delay: 0.4
             }} className="p-4 sm:p-6 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-                <h3 className="font-display text-base sm:text-lg font-semibold mb-1 sm:mb-2">Resposta Rápida</h3>
+                <h3 className="font-display text-base sm:text-lg font-semibold mb-1 sm:mb-2">{t('contact.quick')}</h3>
                 <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
-                  Para atendimento imediato, entre em contato pelo WhatsApp!
+                  {t('contact.quickDesc')}
                 </p>
                 <NeonCtaButton href="https://wa.me/5594991022124" className="w-full">
                   <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -1369,63 +1329,92 @@ const Index = () => {
             once: true
           }} className="lg:col-span-3">
               <NeonCard>
-                <h3 className="font-display text-2xl font-bold mb-6">Envie uma Mensagem</h3>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <h3 className="font-display text-2xl font-bold mb-6">{t('contact.form.title')}</h3>
+                <form 
+                  action="https://formsubmit.co/vinnyfpamz@gmail.com" 
+                  method="POST"
+                  className="space-y-6"
+                >
+                  {/* FormSubmit configuration */}
+                  <input type="hidden" name="_subject" value="Nova mensagem do site Vinny Artz" />
+                  <input type="hidden" name="_captcha" value="false" />
+                  <input type="hidden" name="_next" value={window.location.href} />
+                  <input type="hidden" name="_template" value="table" />
+                  
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium mb-2">Seu Nome *</label>
-                      <Input type="text" placeholder="Digite seu nome" value={formData.name} onChange={e => setFormData({
-                      ...formData,
-                      name: e.target.value
-                    })} required className="bg-secondary/50" />
+                      <label className="block text-sm font-medium mb-2">{t('contact.form.name')} *</label>
+                      <Input 
+                        type="text" 
+                        name="name"
+                        placeholder={t('contact.form.namePlaceholder')} 
+                        value={formData.name} 
+                        onChange={e => handleFormInputChange('name', e.target.value)}
+                        required 
+                        className="bg-secondary/50" 
+                      />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">Seu E-mail *</label>
-                      <Input type="email" placeholder="seu@email.com" value={formData.email} onChange={e => setFormData({
-                      ...formData,
-                      email: e.target.value
-                    })} required className="bg-secondary/50" />
+                      <label className="block text-sm font-medium mb-2">{t('contact.form.email')} *</label>
+                      <Input 
+                        type="email" 
+                        name="email"
+                        placeholder="seu@email.com" 
+                        value={formData.email} 
+                        onChange={e => handleFormInputChange('email', e.target.value)}
+                        required 
+                        className="bg-secondary/50" 
+                      />
                     </div>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium mb-2">WhatsApp</label>
-                      <Input type="tel" placeholder="(00) 00000-0000" value={formData.phone} onChange={e => setFormData({
-                      ...formData,
-                      phone: e.target.value
-                    })} className="bg-secondary/50" />
+                      <label className="block text-sm font-medium mb-2">{t('contact.form.phone')}</label>
+                      <Input 
+                        type="tel" 
+                        name="phone"
+                        placeholder="(00) 00000-0000" 
+                        value={formData.phone} 
+                        onChange={e => handleFormInputChange('phone', e.target.value)}
+                        className="bg-secondary/50" 
+                      />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">Assunto *</label>
-                      <Input type="text" placeholder="Sobre o que deseja falar?" value={formData.subject} onChange={e => setFormData({
-                      ...formData,
-                      subject: e.target.value
-                    })} required className="bg-secondary/50" />
+                      <label className="block text-sm font-medium mb-2">{t('contact.form.subject')} *</label>
+                      <Input 
+                        type="text" 
+                        name="subject"
+                        placeholder={t('contact.form.subjectPlaceholder')} 
+                        value={formData.subject} 
+                        onChange={e => handleFormInputChange('subject', e.target.value)}
+                        required 
+                        className="bg-secondary/50" 
+                      />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">Sua Mensagem *</label>
-                    <Textarea placeholder="Descreva seu projeto ou dúvida..." value={formData.message} onChange={e => setFormData({
-                    ...formData,
-                    message: e.target.value
-                  })} required rows={6} className="bg-secondary/50 resize-none" />
+                    <label className="block text-sm font-medium mb-2">{t('contact.form.message')} *</label>
+                    <Textarea 
+                      name="message"
+                      placeholder={t('contact.form.messagePlaceholder')} 
+                      value={formData.message} 
+                      onChange={e => handleFormInputChange('message', e.target.value)}
+                      required 
+                      rows={6} 
+                      className="bg-secondary/50 resize-none" 
+                    />
                   </div>
 
-                  <NeonCtaButton type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? <>
-                        <span className="animate-spin">⏳</span>
-                        {t('contact.form.sending')}
-                      </> : <>
-                        <Send className="w-5 h-5" />
-                        {t('contact.form.submit')}
-                      </>}
+                  <NeonCtaButton type="submit" size="lg" className="w-full">
+                    <Send className="w-5 h-5" />
+                    {t('contact.form.submit')}
                   </NeonCtaButton>
 
                   <p className="text-xs text-center text-muted-foreground">
                     <CheckCircle className="w-3 h-3 inline mr-1" />
-                    Responderei sua mensagem em até 24 horas úteis.
+                    {t('contact.form.response')}
                   </p>
                 </form>
               </NeonCard>
@@ -1451,12 +1440,11 @@ const Index = () => {
           once: true
         }} className="max-w-3xl mx-auto text-center">
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-              Pronto Para{" "}
-              <span className="text-gradient">Começar</span>?
+              {t('cta.title')}{" "}
+              <span className="text-gradient">{t('cta.titleHighlight')}</span>?
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Estou pronto para transformar suas ideias em realidade visual. 
-              Entre em contato e vamos conversar sobre seu projeto.
+              {t('cta.description')}
             </p>
             <NeonCtaButton href="https://wa.me/5594991022124" size="xl">
               <Sparkles className="w-5 h-5" />

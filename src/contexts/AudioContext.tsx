@@ -62,11 +62,11 @@ const playTone = (frequency: number, duration: number, volume: number, type: Osc
   }
 };
 
-// Ambient music URLs - calm futuristic ambient tracks
+// Ambient music URLs - calm futuristic ambient tracks (verified working URLs)
 const AMBIENT_TRACKS = [
-  'https://cdn.pixabay.com/audio/2022/10/25/audio_946bc8c592.mp3', // Ambient relaxing
-  'https://cdn.pixabay.com/audio/2022/03/10/audio_6c4fae7d4e.mp3', // Electronic ambient
-  'https://cdn.pixabay.com/audio/2024/02/14/audio_8e65e3c1c5.mp3', // Calm lofi
+  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
 ];
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
