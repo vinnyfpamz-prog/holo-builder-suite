@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { ArrowRight, Palette, Video, Globe, Printer, FileText, Sparkles, Star, ChevronRight, User, Target, Heart, Lightbulb, Rocket, CheckCircle, Zap, Code, Image, Share2, Megaphone, PenTool, Monitor, Smartphone, Film, Layout, Search, FileCheck, FolderOpen, ExternalLink, Filter, Quote, ChevronLeft, MessageCircle, Instagram, Mail, MapPin, Phone, Send, Clock, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { NeonCtaButton } from "@/components/ui/neon-cta-button";
 import { SectionHeader } from "@/components/ui/section-header";
 import { NeonCard } from "@/components/ui/neon-card";
 import FaqSection from "@/components/sections/FaqSection";
@@ -12,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { FullscreenModal } from "@/components/ui/fullscreen-modal";
 import { useAudio } from "@/contexts/AudioContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import logo from "@/assets/logo.png";
 import vinnyPhoto from "@/assets/vinny-photo.png";
 import testimonialMale1 from "@/assets/testimonial-male-1.jpg";
@@ -397,10 +399,9 @@ const businessHours = [{
 // ========== COMPONENT ==========
 
 const Index = () => {
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
   const { playClickSound, playHoverSound, playSuccessSound, lowerVolumeTemporarily, restoreVolume } = useAudio();
+  const { t } = useLanguage();
   const [activeServiceTab, setActiveServiceTab] = useState("digital");
   const [activePortfolioCategory, setActivePortfolioCategory] = useState("all");
   const [hoveredPortfolioItem, setHoveredPortfolioItem] = useState<string | null>(null);
@@ -644,18 +645,14 @@ const Index = () => {
             }} transition={{
               delay: 0.6
             }} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-2 sm:px-0">
-                <Button variant="hero" size="lg" asChild className="w-full sm:w-auto text-sm sm:text-base">
-                  <a href="https://wa.me/5594991022124" target="_blank" rel="noopener noreferrer">
-                    <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
-                    Solicitar Orçamento
-                  </a>
-                </Button>
-                <Button variant="outline" size="lg" asChild className="w-full sm:w-auto text-sm sm:text-base">
-                  <a href="#portfolio">
-                    Ver Portfólio
-                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </a>
-                </Button>
+                <NeonCtaButton href="https://wa.me/5594991022124" size="lg" className="w-full sm:w-auto">
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+                  {t('hero.cta')}
+                </NeonCtaButton>
+                <NeonCtaButton href="#portfolio" variant="outline" size="lg" className="w-full sm:w-auto">
+                  {t('hero.portfolio')}
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                </NeonCtaButton>
               </motion.div>
             </motion.div>
 
@@ -760,11 +757,10 @@ const Index = () => {
                 Acredito que o bom design é aquele que resolve problemas de forma elegante e impactante. 
                 Cada pixel, cada cor, cada elemento tem um propósito: comunicar, conectar e converter.
               </p>
-              <Button variant="hero" size="lg" asChild className="w-full sm:w-auto">
-                <a href="https://wa.me/5594991022124" target="_blank" rel="noopener noreferrer">
-                  Vamos Conversar
-                </a>
-              </Button>
+              <NeonCtaButton href="https://wa.me/5594991022124" size="lg" className="w-full sm:w-auto">
+                <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                {t('about.cta')}
+              </NeonCtaButton>
             </motion.div>
 
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -1356,12 +1352,10 @@ const Index = () => {
                 <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
                   Para atendimento imediato, entre em contato pelo WhatsApp!
                 </p>
-                <Button variant="hero" className="w-full" asChild>
-                  <a href="https://wa.me/5594991022124" target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                    Chamar no WhatsApp
-                  </a>
-                </Button>
+                <NeonCtaButton href="https://wa.me/5594991022124" className="w-full">
+                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                  {t('contact.whatsapp')}
+                </NeonCtaButton>
               </motion.div>
             </div>
 
@@ -1419,15 +1413,15 @@ const Index = () => {
                   })} required rows={6} className="bg-secondary/50 resize-none" />
                   </div>
 
-                  <Button type="submit" variant="hero" size="lg" className="w-full" disabled={isSubmitting}>
+                  <NeonCtaButton type="submit" size="lg" className="w-full" disabled={isSubmitting}>
                     {isSubmitting ? <>
                         <span className="animate-spin">⏳</span>
-                        Enviando...
+                        {t('contact.form.sending')}
                       </> : <>
                         <Send className="w-5 h-5" />
-                        Enviar Mensagem
+                        {t('contact.form.submit')}
                       </>}
-                  </Button>
+                  </NeonCtaButton>
 
                   <p className="text-xs text-center text-muted-foreground">
                     <CheckCircle className="w-3 h-3 inline mr-1" />
@@ -1464,12 +1458,10 @@ const Index = () => {
               Estou pronto para transformar suas ideias em realidade visual. 
               Entre em contato e vamos conversar sobre seu projeto.
             </p>
-            <Button variant="hero" size="xl" asChild>
-              <a href="https://wa.me/5594991022124" target="_blank" rel="noopener noreferrer">
-                <Sparkles className="w-5 h-5" />
-                Iniciar Projeto
-              </a>
-            </Button>
+            <NeonCtaButton href="https://wa.me/5594991022124" size="xl">
+              <Sparkles className="w-5 h-5" />
+              {t('cta.button')}
+            </NeonCtaButton>
           </motion.div>
         </div>
       </section>
