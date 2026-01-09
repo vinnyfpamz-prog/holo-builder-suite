@@ -161,7 +161,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, []);
 
-  // Auto-start on first user interaction
+  // Auto-start on first user interaction (including mouse move)
   useEffect(() => {
     if (hasStarted.current) return;
 
@@ -169,23 +169,30 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (!hasStarted.current) {
         startMusic();
       }
+      cleanup();
+    };
+
+    const cleanup = () => {
       window.removeEventListener("pointerdown", tryAutostart);
       window.removeEventListener("keydown", tryAutostart);
       window.removeEventListener("wheel", tryAutostart);
       window.removeEventListener("touchstart", tryAutostart);
+      window.removeEventListener("mousemove", tryAutostart);
+      window.removeEventListener("scroll", tryAutostart);
     };
 
+    // Try autoplay immediately (works if user already interacted with domain)
+    startMusic();
+
+    // Fallback: start on any interaction
     window.addEventListener("pointerdown", tryAutostart, { once: true });
     window.addEventListener("keydown", tryAutostart, { once: true });
     window.addEventListener("wheel", tryAutostart, { once: true, passive: true } as any);
     window.addEventListener("touchstart", tryAutostart, { once: true });
+    window.addEventListener("mousemove", tryAutostart, { once: true });
+    window.addEventListener("scroll", tryAutostart, { once: true, passive: true } as any);
 
-    return () => {
-      window.removeEventListener("pointerdown", tryAutostart);
-      window.removeEventListener("keydown", tryAutostart);
-      window.removeEventListener("wheel", tryAutostart as any);
-      window.removeEventListener("touchstart", tryAutostart);
-    };
+    return cleanup;
   }, [startMusic]);
 
   // Cleanup on unmount
