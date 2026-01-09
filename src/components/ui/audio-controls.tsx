@@ -1,86 +1,92 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Volume2, VolumeX, Music, Music2 } from "lucide-react";
+import { Volume2, VolumeX } from "lucide-react";
 import { useState } from "react";
 import { useAudio } from "@/contexts/AudioContext";
 
 export const AudioControls = () => {
   const { isMusicPlaying, isMuted, volume, toggleMusic, toggleMute, setVolume, playClickSound } = useAudio();
-  const [showVolumeSlider, setShowVolumeSlider] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleMainClick = () => {
+    playClickSound();
+    // First click: open panel. If already open, toggle music.
+    if (!open) {
+      setOpen(true);
+      return;
+    }
+    toggleMusic();
+  };
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 20 }}
+      initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.5 }}
-      className="fixed bottom-4 right-4 z-50 flex items-center gap-2"
-      onMouseEnter={() => setShowVolumeSlider(true)}
-      onMouseLeave={() => setShowVolumeSlider(false)}
+      className="fixed bottom-4 left-4 z-50 flex items-center gap-2"
     >
-      {/* Volume slider */}
       <AnimatePresence>
-        {showVolumeSlider && (
+        {open && (
           <motion.div
             initial={{ opacity: 0, width: 0 }}
-            animate={{ opacity: 1, width: 100 }}
+            animate={{ opacity: 1, width: 140 }}
             exit={{ opacity: 0, width: 0 }}
             className="overflow-hidden"
           >
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.1"
-              value={volume}
-              onChange={(e) => setVolume(parseFloat(e.target.value))}
-              className="w-full h-2 bg-secondary rounded-full appearance-none cursor-pointer accent-primary"
-              style={{
-                background: `linear-gradient(to right, hsl(24 95% 53%) ${volume * 100}%, hsl(0 0% 15%) ${volume * 100}%)`,
-              }}
-            />
+            <div className="flex items-center gap-2 rounded-full bg-card border border-primary/30 px-3 py-2 shadow-[0_0_18px_hsl(24_95%_53%/0.22)]">
+              <button
+                type="button"
+                onClick={() => {
+                  playClickSound();
+                  toggleMute();
+                }}
+                className="w-8 h-8 rounded-full bg-primary/10 border border-primary/25 flex items-center justify-center text-primary hover:bg-primary/15 transition-colors"
+                title={isMuted ? "Unmute" : "Mute"}
+              >
+                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              </button>
+
+              <input
+                aria-label="Volume"
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={volume}
+                onChange={(e) => setVolume(parseFloat(e.target.value))}
+                className="w-full h-2 bg-secondary rounded-full appearance-none cursor-pointer accent-primary"
+                style={{
+                  background: `linear-gradient(to right, hsl(24 95% 53%) ${volume * 100}%, hsl(var(--muted)) ${volume * 100}%)`,
+                }}
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Mute button */}
       <motion.button
-        whileHover={{ scale: 1.1 }}
+        whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => {
-          playClickSound();
-          toggleMute();
-        }}
-        className="w-10 h-10 rounded-full bg-card border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/10 transition-colors shadow-[0_0_15px_hsl(24_95%_53%/0.3)]"
-        title={isMuted ? 'Ativar som' : 'Mutar'}
+        onClick={handleMainClick}
+        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all border shadow-[0_0_18px_hsl(24_95%_53%/0.28)] ${
+          isMusicPlaying ? "bg-primary text-primary-foreground border-primary/40" : "bg-card text-primary border-primary/30 hover:bg-primary/10"
+        }`}
+        title={open ? (isMusicPlaying ? "Pause ambience" : "Play ambience") : "Sound settings"}
       >
         {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
       </motion.button>
 
-      {/* Music toggle button */}
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => {
-          playClickSound();
-          toggleMusic();
-        }}
-        className={`w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-[0_0_20px_hsl(24_95%_53%/0.4)] ${
-          isMusicPlaying 
-            ? 'bg-primary text-primary-foreground' 
-            : 'bg-card border border-primary/30 text-primary hover:bg-primary/10'
-        }`}
-        title={isMusicPlaying ? 'Pausar música' : 'Tocar música'}
-      >
-        {isMusicPlaying ? (
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          >
-            <Music2 className="w-6 h-6" />
-          </motion.div>
-        ) : (
-          <Music className="w-6 h-6" />
-        )}
-      </motion.button>
+      {open && (
+        <button
+          type="button"
+          onClick={() => {
+            playClickSound();
+            setOpen(false);
+          }}
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Close
+        </button>
+      )}
     </motion.div>
   );
 };
