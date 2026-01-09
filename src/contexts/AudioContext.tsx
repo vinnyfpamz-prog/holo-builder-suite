@@ -23,34 +23,18 @@ export const useAudio = () => {
   return context;
 };
 
-type AmbientGraph = {
-  ctx: globalThis.AudioContext;
-  master: GainNode;
-  ambientGain: GainNode;
-  nodes: Array<{ stop: () => void }>;
-};
+// Ambient music tracks - royalty-free cosmic/relaxing ambient
+const AMBIENT_TRACKS = [
+  "https://cdn.pixabay.com/audio/2024/11/29/audio_47e3f8c622.mp3", // Relaxing ambient
+  "https://cdn.pixabay.com/audio/2022/10/25/audio_a00e7dd04e.mp3", // Cosmic ambient
+  "https://cdn.pixabay.com/audio/2023/07/30/audio_e4596bdc5f.mp3", // Space ambient
+  "https://cdn.pixabay.com/audio/2024/02/14/audio_d0bf2f2a03.mp3", // Calm atmosphere
+];
 
 let sharedCtx: globalThis.AudioContext | null = null;
 const getCtx = () => {
   if (!sharedCtx) sharedCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
   return sharedCtx;
-};
-
-const makeNoiseBuffer = (ctx: globalThis.AudioContext, seconds = 2) => {
-  const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * seconds), ctx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.25;
-  return buffer;
-};
-
-const safeResume = async (ctx: globalThis.AudioContext) => {
-  if (ctx.state === "suspended") {
-    try {
-      await ctx.resume();
-    } catch {
-      // ignore
-    }
-  }
 };
 
 const playTone = (
@@ -85,149 +69,98 @@ const playTone = (
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolumeState] = useState(0.22);
-  const [previousVolume, setPreviousVolume] = useState(0.22);
-  const [isLoading] = useState(false);
+  const [volume, setVolumeState] = useState(0.25);
+  const [previousVolume, setPreviousVolume] = useState(0.25);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const ambientRef = useRef<AmbientGraph | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const currentTrackIndex = useRef(0);
   const lastClickAtRef = useRef<number>(0);
+  const hasStarted = useRef(false);
 
-  const applyGains = useCallback(
-    (nextVolume: number, nextMuted: boolean) => {
-      const graph = ambientRef.current;
-      if (!graph) return;
-      const v = nextMuted ? 0 : Math.max(0, Math.min(1, nextVolume));
-      graph.ambientGain.gain.setTargetAtTime(v, graph.ctx.currentTime, 0.03);
-    },
-    []
-  );
+  // Initialize audio element
+  const initAudio = useCallback(() => {
+    if (audioRef.current) return audioRef.current;
 
-  const stopAmbient = useCallback(() => {
-    const graph = ambientRef.current;
-    if (!graph) return;
-
-    // fade out quickly
-    graph.ambientGain.gain.setTargetAtTime(0.0001, graph.ctx.currentTime, 0.05);
-
-    // stop nodes after fade
-    window.setTimeout(() => {
-      graph.nodes.forEach((n) => {
-        try {
-          n.stop();
-        } catch {
-          // ignore
-        }
-      });
-      ambientRef.current = null;
-      setIsMusicPlaying(false);
-    }, 250);
-  }, []);
-
-  const startAmbient = useCallback(async () => {
-    if (ambientRef.current) return;
-
-    const ctx = getCtx();
-    await safeResume(ctx);
-
-    const master = ctx.createGain();
-    master.gain.value = 1;
-    master.connect(ctx.destination);
-
-    const ambientGain = ctx.createGain();
-    ambientGain.gain.value = isMuted ? 0 : volume;
-    ambientGain.connect(master);
-
-    // A calm "cosmic" pad: detuned oscillators + filtered noise + slow LFO
-    const filter = ctx.createBiquadFilter();
-    filter.type = "lowpass";
-    filter.frequency.value = 520;
-    filter.Q.value = 0.7;
-    filter.connect(ambientGain);
-
-    const lfo = ctx.createOscillator();
-    lfo.type = "sine";
-    lfo.frequency.value = 0.03; // very slow
-    const lfoGain = ctx.createGain();
-    lfoGain.gain.value = 220;
-    lfo.connect(lfoGain);
-    lfoGain.connect(filter.frequency);
-
-    const osc1 = ctx.createOscillator();
-    const osc2 = ctx.createOscillator();
-    const osc3 = ctx.createOscillator();
-    osc1.type = "sine";
-    osc2.type = "triangle";
-    osc3.type = "sine";
-
-    // Warm chord-ish bed (A minor-ish): 55, 110, 164.8
-    osc1.frequency.value = 55;
-    osc2.frequency.value = 110;
-    osc3.frequency.value = 164.81;
-    osc2.detune.value = -9;
-    osc3.detune.value = 7;
-
-    const oscGain = ctx.createGain();
-    oscGain.gain.value = 0.22;
-
-    osc1.connect(oscGain);
-    osc2.connect(oscGain);
-    osc3.connect(oscGain);
-    oscGain.connect(filter);
-
-    const noise = ctx.createBufferSource();
-    noise.buffer = makeNoiseBuffer(ctx, 2);
-    noise.loop = true;
-    const noiseFilter = ctx.createBiquadFilter();
-    noiseFilter.type = "bandpass";
-    noiseFilter.frequency.value = 280;
-    noiseFilter.Q.value = 0.6;
-    const noiseGain = ctx.createGain();
-    noiseGain.gain.value = 0.06;
-
-    // subtle movement in noise too
-    const noiseLfo = ctx.createOscillator();
-    noiseLfo.type = "sine";
-    noiseLfo.frequency.value = 0.07;
-    const noiseLfoGain = ctx.createGain();
-    noiseLfoGain.gain.value = 120;
-    noiseLfo.connect(noiseLfoGain);
-    noiseLfoGain.connect(noiseFilter.frequency);
-
-    noise.connect(noiseFilter);
-    noiseFilter.connect(noiseGain);
-    noiseGain.connect(filter);
-
-    // Start all
-    const now = ctx.currentTime;
-    lfo.start(now);
-    noiseLfo.start(now);
-    osc1.start(now);
-    osc2.start(now);
-    osc3.start(now);
-    noise.start(now);
-
-    ambientRef.current = {
-      ctx,
-      master,
-      ambientGain,
-      nodes: [
-        { stop: () => lfo.stop() },
-        { stop: () => noiseLfo.stop() },
-        { stop: () => osc1.stop() },
-        { stop: () => osc2.stop() },
-        { stop: () => osc3.stop() },
-        { stop: () => noise.stop() },
-      ],
+    const audio = new Audio();
+    audio.loop = true;
+    audio.volume = volume;
+    audio.preload = "auto";
+    audio.crossOrigin = "anonymous";
+    
+    // Try loading tracks until one works
+    const tryLoadTrack = (index: number) => {
+      if (index >= AMBIENT_TRACKS.length) {
+        console.warn("All ambient tracks failed to load");
+        setIsLoading(false);
+        return;
+      }
+      
+      audio.src = AMBIENT_TRACKS[index];
+      currentTrackIndex.current = index;
     };
 
-    applyGains(volume, isMuted);
-    setIsMusicPlaying(true);
-  }, [applyGains, isMuted, volume]);
+    audio.onerror = () => {
+      console.warn(`Track ${currentTrackIndex.current} failed, trying next...`);
+      tryLoadTrack(currentTrackIndex.current + 1);
+    };
 
-  // Start passively on first user interaction (autoplay-safe)
+    audio.oncanplaythrough = () => {
+      setIsLoading(false);
+    };
+
+    audio.onended = () => {
+      // Loop to next track for variety
+      const nextIndex = (currentTrackIndex.current + 1) % AMBIENT_TRACKS.length;
+      tryLoadTrack(nextIndex);
+      if (isMusicPlaying) {
+        audio.play().catch(() => {});
+      }
+    };
+
+    tryLoadTrack(0);
+    audioRef.current = audio;
+    return audio;
+  }, [volume, isMusicPlaying]);
+
+  // Apply volume changes
   useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = isMuted ? 0 : volume;
+    }
+  }, [volume, isMuted]);
+
+  const startMusic = useCallback(async () => {
+    if (isMusicPlaying) return;
+    
+    setIsLoading(true);
+    const audio = initAudio();
+    
+    try {
+      await audio.play();
+      setIsMusicPlaying(true);
+      hasStarted.current = true;
+    } catch (e) {
+      console.warn("Music autoplay blocked:", e);
+      setIsLoading(false);
+    }
+  }, [isMusicPlaying, initAudio]);
+
+  const stopMusic = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsMusicPlaying(false);
+    }
+  }, []);
+
+  // Auto-start on first user interaction
+  useEffect(() => {
+    if (hasStarted.current) return;
+
     const tryAutostart = () => {
-      if (!isMusicPlaying) startAmbient();
+      if (!hasStarted.current) {
+        startMusic();
+      }
       window.removeEventListener("pointerdown", tryAutostart);
       window.removeEventListener("keydown", tryAutostart);
       window.removeEventListener("wheel", tryAutostart);
@@ -245,49 +178,52 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       window.removeEventListener("wheel", tryAutostart as any);
       window.removeEventListener("touchstart", tryAutostart);
     };
-  }, [isMusicPlaying, startAmbient]);
+  }, [startMusic]);
 
+  // Cleanup on unmount
   useEffect(() => {
-    applyGains(volume, isMuted);
-  }, [applyGains, volume, isMuted]);
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   const toggleMusic = useCallback(() => {
-    if (isMusicPlaying) stopAmbient();
-    else startAmbient();
-  }, [isMusicPlaying, startAmbient, stopAmbient]);
+    if (isMusicPlaying) {
+      stopMusic();
+    } else {
+      startMusic();
+    }
+  }, [isMusicPlaying, startMusic, stopMusic]);
 
   const toggleMute = useCallback(() => {
     setIsMuted((prev) => !prev);
   }, []);
 
-  const setVolume = useCallback(
-    (newVolume: number) => {
-      const v = Math.max(0, Math.min(1, newVolume));
-      setVolumeState(v);
-      setPreviousVolume(v);
-      applyGains(v, isMuted);
-    },
-    [applyGains, isMuted]
-  );
+  const setVolume = useCallback((newVolume: number) => {
+    const v = Math.max(0, Math.min(1, newVolume));
+    setVolumeState(v);
+    setPreviousVolume(v);
+  }, []);
 
   const lowerVolumeTemporarily = useCallback(() => {
     if (!isMusicPlaying) return;
     setPreviousVolume(volume);
     const lowered = volume * 0.15;
     setVolumeState(lowered);
-    applyGains(lowered, isMuted);
-  }, [applyGains, isMuted, isMusicPlaying, volume]);
+  }, [isMusicPlaying, volume]);
 
   const restoreVolume = useCallback(() => {
     if (!isMusicPlaying) return;
     setVolumeState(previousVolume);
-    applyGains(previousVolume, isMuted);
-  }, [applyGains, isMuted, isMusicPlaying, previousVolume]);
+  }, [isMusicPlaying, previousVolume]);
 
   const playClickSound = useCallback(() => {
     if (isMuted) return;
     const now = Date.now();
-    if (now - lastClickAtRef.current < 110) return; // prevent doubles
+    if (now - lastClickAtRef.current < 110) return;
     lastClickAtRef.current = now;
 
     playTone(600, 0.06, volume, "sine");

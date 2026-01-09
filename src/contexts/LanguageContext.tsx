@@ -27,9 +27,9 @@ const translations: Translations = {
   
   // Stats
   'stats.projects': { pt: 'Projetos Entregues', en: 'Projects Delivered' },
-  'stats.clients': { pt: 'Clientes Satisfeitos', en: 'Satisfied Clients' },
+  'stats.clients': { pt: 'Clientes Atendidos', en: 'Clients Served' },
   'stats.experience': { pt: 'Anos de Experiência', en: 'Years of Experience' },
-  'stats.dedication': { pt: 'Dedicação', en: 'Dedication' },
+  'stats.dedication': { pt: 'Comprometimento', en: 'Commitment' },
   
   // About
   'about.badge': { pt: 'Sobre', en: 'About' },
@@ -73,6 +73,15 @@ const translations: Translations = {
   'skills.badge': { pt: 'Habilidades', en: 'Skills' },
   'skills.title': { pt: 'Minhas Ferramentas', en: 'My Tools' },
   'skills.subtitle': { pt: 'As principais tecnologias e softwares que domino', en: 'The main technologies and software I master' },
+  'skill.corel': { pt: 'Corel Draw', en: 'Corel Draw' },
+  'skill.capcut': { pt: 'CapCut', en: 'CapCut' },
+  'skill.canva': { pt: 'Canva', en: 'Canva' },
+  'skill.picsart': { pt: 'PicsArt', en: 'PicsArt' },
+  'skill.office': { pt: 'Pacote Office', en: 'Office Suite' },
+  'skill.marketing': { pt: 'Marketing Digital', en: 'Digital Marketing' },
+  'skill.sales': { pt: 'Técnicas em Vendas', en: 'Sales Techniques' },
+  'skill.ai': { pt: 'Ferramentas IA', en: 'AI Tools' },
+  'skill.photography': { pt: 'Fotografia', en: 'Photography' },
   
   // Process
   'process.badge': { pt: 'Processo', en: 'Process' },

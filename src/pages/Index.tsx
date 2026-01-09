@@ -78,111 +78,111 @@ const services = [{
 }];
 const stats = [{
   value: "500+",
-  label: "Projetos Entregues"
+  labelKey: "stats.projects"
 }, {
   value: "200+",
-  label: "Clientes Satisfeitos"
+  labelKey: "stats.clients"
 }, {
   value: "6+",
-  label: "Anos de Experiência"
+  labelKey: "stats.experience"
 }, {
   value: "100%",
-  label: "Dedicação"
+  labelKey: "stats.dedication"
 }];
 const timeline = [{
   year: "2020",
-  title: "Início da Jornada",
-  description: "Comecei a explorar o mundo do design gráfico, aprendendo as bases fundamentais e conquistando os primeiros clientes."
+  titleKey: "timeline.2020.title",
+  descKey: "timeline.2020.desc"
 }, {
   year: "2021",
-  title: "Expansão de Serviços",
-  description: "Adicionei edição de vídeo ao meu portfólio e desenvolvi projetos de identidade visual."
+  titleKey: "timeline.2021.title",
+  descKey: "timeline.2021.desc"
 }, {
   year: "2022",
-  title: "Web Design",
-  description: "Expandi para criação de sites e landing pages, oferecendo soluções digitais completas."
+  titleKey: "timeline.2022.title",
+  descKey: "timeline.2022.desc"
 }, {
   year: "2023",
-  title: "Parceria Gráfica",
-  description: "Estabeleci parcerias com gráficas para oferecer materiais impressos de qualidade."
+  titleKey: "timeline.2023.title",
+  descKey: "timeline.2023.desc"
 }, {
   year: "2024",
-  title: "Crescimento e Inovação",
-  description: "Incorporei novas ferramentas de IA e tecnologias para entregar projetos ainda mais impactantes."
+  titleKey: "timeline.2024.title",
+  descKey: "timeline.2024.desc"
 }, {
   year: "2025",
-  title: "Novos Horizontes",
-  description: "Ampliação do portfólio com soluções digitais avançadas e atendimento personalizado."
+  titleKey: "timeline.2025.title",
+  descKey: "timeline.2025.desc"
 }, {
   year: "2026",
-  title: "Atualidade",
-  description: "Atendendo clientes em toda a região de Parauapebas e entregando projetos de alto impacto."
+  titleKey: "timeline.2026.title",
+  descKey: "timeline.2026.desc"
 }];
 const skills = [{
-  name: "Corel Draw",
+  nameKey: "skill.corel",
   level: 95
 }, {
-  name: "CapCut",
+  nameKey: "skill.capcut",
   level: 90
 }, {
-  name: "Canva",
+  nameKey: "skill.canva",
   level: 95
 }, {
-  name: "PicsArt",
+  nameKey: "skill.picsart",
   level: 85
 }, {
-  name: "Pacote Office",
+  nameKey: "skill.office",
   level: 88
 }, {
-  name: "Marketing Digital",
+  nameKey: "skill.marketing",
   level: 85
 }, {
-  name: "Técnicas em Vendas",
+  nameKey: "skill.sales",
   level: 80
 }, {
-  name: "Ferramentas IA",
+  nameKey: "skill.ai",
   level: 88
 }, {
-  name: "Fotografia",
+  nameKey: "skill.photography",
   level: 85
 }];
 const values = [{
   icon: Target,
-  title: "Foco no Cliente",
-  description: "Cada projeto é único. Dedico atenção total às necessidades e objetivos de cada cliente."
+  titleKey: "values.focus.title",
+  descKey: "values.focus.desc"
 }, {
   icon: Heart,
-  title: "Paixão pelo Design",
-  description: "O design não é apenas meu trabalho, é minha paixão. Isso reflete em cada pixel que crio."
+  titleKey: "values.passion.title",
+  descKey: "values.passion.desc"
 }, {
   icon: Lightbulb,
-  title: "Inovação Constante",
-  description: "Busco sempre as últimas tendências e tecnologias para entregar resultados modernos."
+  titleKey: "values.innovation.title",
+  descKey: "values.innovation.desc"
 }, {
   icon: Rocket,
-  title: "Resultados Reais",
-  description: "Meu objetivo é criar designs que não apenas impressionam, mas geram resultados."
+  titleKey: "values.results.title",
+  descKey: "values.results.desc"
 }];
 const processSteps = [{
   step: "01",
   icon: Lightbulb,
-  title: "Conceito",
-  description: "Entendo suas necessidades, objetivos e visão. Pesquiso referências e defino a direção criativa."
+  titleKey: "process.concept.title",
+  descKey: "process.concept.desc"
 }, {
   step: "02",
   icon: Palette,
-  title: "Criação",
-  description: "Desenvolvo propostas criativas, explorando diferentes abordagens e estilos visuais."
+  titleKey: "process.creation.title",
+  descKey: "process.creation.desc"
 }, {
   step: "03",
   icon: Zap,
-  title: "Refinamento",
-  description: "Ajustes e melhorias baseadas no seu feedback até alcançar a perfeição desejada."
+  titleKey: "process.refinement.title",
+  descKey: "process.refinement.desc"
 }, {
   step: "04",
   icon: CheckCircle,
-  title: "Entrega",
-  description: "Arquivos finais em todos os formatos necessários, prontos para uso imediato."
+  titleKey: "process.delivery.title",
+  descKey: "process.delivery.desc"
 }];
 const serviceCategories = [{
   id: "digital",
@@ -323,44 +323,44 @@ const categoryIconMap: Record<string, React.ComponentType<{ className?: string }
 };
 const testimonials = [{
   id: 1,
-  name: "Maria Silva",
-  role: "Empresária - Loja de Roupas",
-  content: "O Vinny transformou completamente a identidade visual da minha loja. As artes para redes sociais aumentaram muito o engajamento. Super recomendo!",
+  nameKey: "testimonial.1.name",
+  roleKey: "testimonial.1.role",
+  contentKey: "testimonial.1.content",
   rating: 5,
   image: testimonialFemale1
 }, {
   id: 2,
-  name: "João Pedro",
-  role: "Dono de Restaurante",
-  content: "Profissional excepcional! O cardápio digital e as artes para delivery ficaram perfeitas. Meus clientes sempre elogiam o visual.",
+  nameKey: "testimonial.2.name",
+  roleKey: "testimonial.2.role",
+  contentKey: "testimonial.2.content",
   rating: 5,
   image: testimonialRestaurante
 }, {
   id: 3,
-  name: "Ana Carolina",
-  role: "Influencer Digital",
-  content: "Trabalho com o Vinny há mais de 1 ano. Ele entende exatamente o que preciso e sempre entrega no prazo. Meu feed nunca esteve tão bonito!",
+  nameKey: "testimonial.3.name",
+  roleKey: "testimonial.3.role",
+  contentKey: "testimonial.3.content",
   rating: 5,
   image: testimonialFemale2
 }, {
   id: 4,
-  name: "Carlos Eduardo",
-  role: "CEO - Startup de Tech",
-  content: "A identidade visual da nossa startup ficou incrível. Logo, site, apresentações... tudo com uma qualidade impressionante!",
+  nameKey: "testimonial.4.name",
+  roleKey: "testimonial.4.role",
+  contentKey: "testimonial.4.content",
   rating: 5,
   image: testimonialCeo
 }, {
   id: 5,
-  name: "Fernanda Lima",
-  role: "Personal Trainer",
-  content: "Os vídeos promocionais que o Vinny fez para minha academia trouxeram muitos alunos novos. Criatividade e qualidade!",
+  nameKey: "testimonial.5.name",
+  roleKey: "testimonial.5.role",
+  contentKey: "testimonial.5.content",
   rating: 5,
   image: testimonialFemale3
 }, {
   id: 6,
-  name: "Roberto Alves",
-  role: "Advogado",
-  content: "Site institucional impecável e cartões de visita premium. A atenção aos detalhes é impressionante!",
+  nameKey: "testimonial.6.name",
+  roleKey: "testimonial.6.role",
+  contentKey: "testimonial.6.content",
   rating: 5,
   image: testimonialAdvogado
 }];
@@ -386,14 +386,14 @@ const contactInfo = [{
 
 // Video testimonials - now fetched from database
 const businessHours = [{
-  day: "Segunda - Sexta",
+  dayKey: "days.weekdays",
   hours: "08:00 - 18:00"
 }, {
-  day: "Sábado",
+  dayKey: "days.saturday",
   hours: "09:00 - 14:00"
 }, {
-  day: "Domingo",
-  hours: "Fechado"
+  dayKey: "days.sunday",
+  hoursKey: "days.closed"
 }];
 
 // ========== COMPONENT ==========
@@ -662,7 +662,7 @@ const Index = () => {
       <section className="py-10 sm:py-16 border-y border-border bg-secondary/20">
         <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
-            {stats.map((stat, index) => <motion.div key={stat.label} initial={{
+            {stats.map((stat, index) => <motion.div key={stat.labelKey} initial={{
             opacity: 0,
             y: 20
           }} whileInView={{
@@ -677,7 +677,7 @@ const Index = () => {
                   {stat.value}
                 </div>
                 <div className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider">
-                  {stat.label}
+                  {t(stat.labelKey)}
                 </div>
               </motion.div>)}
           </div>
@@ -716,7 +716,7 @@ const Index = () => {
             </motion.div>
 
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              {values.map((value, index) => <motion.div key={value.title} initial={{
+              {values.map((value, index) => <motion.div key={value.titleKey} initial={{
               opacity: 0,
               y: 30
             }} whileInView={{
@@ -731,8 +731,8 @@ const Index = () => {
                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2 sm:mb-3">
                       <value.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                     </div>
-                    <h3 className="font-display text-xs sm:text-sm font-semibold mb-1">{value.title}</h3>
-                    <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-3">{value.description}</p>
+                    <h3 className="font-display text-xs sm:text-sm font-semibold mb-1">{t(value.titleKey)}</h3>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-3">{t(value.descKey)}</p>
                   </NeonCard>
                 </motion.div>)}
             </div>
@@ -756,8 +756,8 @@ const Index = () => {
             }} className={`relative pl-6 sm:pl-8 md:pl-0 pb-8 sm:pb-12 last:pb-0 ${index % 2 === 0 ? "md:pr-[calc(50%+2rem)] md:text-right" : "md:pl-[calc(50%+2rem)]"}`}>
                   <div className="absolute top-0 left-0 md:left-1/2 w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-primary border-4 border-background md:-translate-x-1/2 shadow-[0_0_20px_hsl(24_95%_53%/0.5)]" />
                   <div className="font-display text-primary text-xl sm:text-2xl font-bold mb-1 sm:mb-2">{item.year}</div>
-                  <h3 className="font-display text-base sm:text-lg font-semibold mb-1 sm:mb-2">{item.title}</h3>
-                  <p className="text-sm sm:text-base text-muted-foreground">{item.description}</p>
+                  <h3 className="font-display text-base sm:text-lg font-semibold mb-1 sm:mb-2">{t(item.titleKey)}</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground">{t(item.descKey)}</p>
                 </motion.div>)}
             </div>
           </div>
@@ -766,7 +766,7 @@ const Index = () => {
           <div className="mb-16 sm:mb-20">
             <SectionHeader badge={t('skills.badge')} title={t('skills.title')} subtitle={t('skills.subtitle')} />
             <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
-              {skills.map((skill, index) => <motion.div key={skill.name} initial={{
+              {skills.map((skill, index) => <motion.div key={skill.nameKey} initial={{
               opacity: 0,
               x: -30
             }} whileInView={{
@@ -778,7 +778,7 @@ const Index = () => {
               delay: index * 0.1
             }}>
                   <div className="flex justify-between mb-1 sm:mb-2">
-                    <span className="text-sm sm:text-base font-medium">{skill.name}</span>
+                    <span className="text-sm sm:text-base font-medium">{t(skill.nameKey)}</span>
                     <span className="text-sm sm:text-base text-primary font-display">{skill.level}%</span>
                   </div>
                   <div className="h-1.5 sm:h-2 bg-secondary rounded-full overflow-hidden">
@@ -819,8 +819,8 @@ const Index = () => {
                     <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-2 sm:mb-4">
                       <step.icon className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
                     </div>
-                    <h3 className="font-display text-sm sm:text-xl font-semibold mb-1 sm:mb-2">{step.title}</h3>
-                    <p className="text-muted-foreground text-xs sm:text-sm line-clamp-3">{step.description}</p>
+                    <h3 className="font-display text-sm sm:text-xl font-semibold mb-1 sm:mb-2">{t(step.titleKey)}</h3>
+                    <p className="text-muted-foreground text-xs sm:text-sm line-clamp-3">{t(step.descKey)}</p>
                   </NeonCard>
                   {index < processSteps.length - 1 && <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-primary/30" />}
                 </motion.div>)}
@@ -1119,15 +1119,15 @@ const Index = () => {
             }}>
                   <NeonCard className="h-full p-4 sm:p-6">
                     <Quote className="w-8 h-8 sm:w-10 sm:h-10 text-primary/20 mb-3 sm:mb-4" />
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4 sm:mb-6 line-clamp-4 sm:line-clamp-none">"{testimonial.content}"</p>
+                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4 sm:mb-6 line-clamp-4 sm:line-clamp-none">"{t(testimonial.contentKey)}"</p>
                     <div className="flex gap-0.5 sm:gap-1 mb-3 sm:mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 fill-primary text-primary" />)}
                     </div>
                     <div className="flex items-center gap-2 sm:gap-3">
-                      <img src={testimonial.image} alt={testimonial.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-primary/30" />
+                      <img src={testimonial.image} alt={t(testimonial.nameKey)} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-primary/30" />
                       <div className="min-w-0">
-                        <div className="font-semibold text-sm sm:text-base truncate">{testimonial.name}</div>
-                        <div className="text-xs sm:text-sm text-muted-foreground truncate">{testimonial.role}</div>
+                        <div className="font-semibold text-sm sm:text-base truncate">{t(testimonial.nameKey)}</div>
+                        <div className="text-xs sm:text-sm text-muted-foreground truncate">{t(testimonial.roleKey)}</div>
                       </div>
                     </div>
                   </NeonCard>
