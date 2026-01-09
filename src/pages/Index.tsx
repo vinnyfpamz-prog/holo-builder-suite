@@ -80,9 +80,6 @@ const stats = [{
   value: "500+",
   labelKey: "stats.projects"
 }, {
-  value: "200+",
-  labelKey: "stats.clients"
-}, {
   value: "6+",
   labelKey: "stats.experience"
 }, {
