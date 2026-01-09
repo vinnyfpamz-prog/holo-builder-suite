@@ -23,12 +23,15 @@ export const useAudio = () => {
   return context;
 };
 
-// Ambient music tracks - royalty-free cosmic/relaxing ambient
+// Ambient music tracks
+// Nota: em alguns ambientes/iframes, links externos podem falhar (CORS/403/bloqueio). Por isso,
+// tentamos primeiro um arquivo local em /public/audio.
 const AMBIENT_TRACKS = [
-  "https://cdn.pixabay.com/audio/2024/11/29/audio_47e3f8c622.mp3", // Relaxing ambient
-  "https://cdn.pixabay.com/audio/2022/10/25/audio_a00e7dd04e.mp3", // Cosmic ambient
-  "https://cdn.pixabay.com/audio/2023/07/30/audio_e4596bdc5f.mp3", // Space ambient
-  "https://cdn.pixabay.com/audio/2024/02/14/audio_d0bf2f2a03.mp3", // Calm atmosphere
+  "/audio/ambient.mp3",
+  "https://cdn.pixabay.com/audio/2024/11/29/audio_47e3f8c622.mp3",
+  "https://cdn.pixabay.com/audio/2022/10/25/audio_a00e7dd04e.mp3",
+  "https://cdn.pixabay.com/audio/2023/07/30/audio_e4596bdc5f.mp3",
+  "https://cdn.pixabay.com/audio/2024/02/14/audio_d0bf2f2a03.mp3",
 ];
 
 let sharedCtx: globalThis.AudioContext | null = null;
@@ -86,8 +89,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     audio.loop = true;
     audio.volume = volume;
     audio.preload = "auto";
-    audio.crossOrigin = "anonymous";
-    
+
     // Try loading tracks until one works
     const tryLoadTrack = (index: number) => {
       if (index >= AMBIENT_TRACKS.length) {
@@ -95,9 +97,15 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setIsLoading(false);
         return;
       }
-      
+
       audio.src = AMBIENT_TRACKS[index];
       currentTrackIndex.current = index;
+      // força o browser a iniciar o carregamento do novo src
+      try {
+        audio.load();
+      } catch {
+        // ignore
+      }
     };
 
     audio.onerror = () => {
