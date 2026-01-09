@@ -80,69 +80,60 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const currentTrackIndex = useRef(0);
   const lastClickAtRef = useRef<number>(0);
   const hasStarted = useRef(false);
+  const isStartingRef = useRef(false);
 
-  // Initialize audio element
-  const initAudio = useCallback(() => {
+  // Initialize audio element ONCE
+  const getAudio = useCallback(() => {
     if (audioRef.current) return audioRef.current;
 
     const audio = new Audio();
     audio.loop = true;
-    audio.volume = volume;
+    audio.volume = 0.25;
     audio.preload = "auto";
-
-    // Try loading tracks until one works
-    const tryLoadTrack = (index: number) => {
-      if (index >= AMBIENT_TRACKS.length) {
+    audio.src = AMBIENT_TRACKS[0];
+    
+    audio.onerror = () => {
+      const nextIndex = currentTrackIndex.current + 1;
+      if (nextIndex < AMBIENT_TRACKS.length) {
+        console.warn(`Track ${currentTrackIndex.current} failed, trying next...`);
+        currentTrackIndex.current = nextIndex;
+        audio.src = AMBIENT_TRACKS[nextIndex];
+        audio.load();
+      } else {
         console.warn("All ambient tracks failed to load");
         setIsLoading(false);
-        return;
       }
-
-      audio.src = AMBIENT_TRACKS[index];
-      currentTrackIndex.current = index;
-      // força o browser a iniciar o carregamento do novo src
-      try {
-        audio.load();
-      } catch {
-        // ignore
-      }
-    };
-
-    audio.onerror = () => {
-      console.warn(`Track ${currentTrackIndex.current} failed, trying next...`);
-      tryLoadTrack(currentTrackIndex.current + 1);
     };
 
     audio.oncanplaythrough = () => {
       setIsLoading(false);
     };
 
-    audio.onended = () => {
-      // Loop to next track for variety
-      const nextIndex = (currentTrackIndex.current + 1) % AMBIENT_TRACKS.length;
-      tryLoadTrack(nextIndex);
-      if (isMusicPlaying) {
-        audio.play().catch(() => {});
-      }
-    };
+    try {
+      audio.load();
+    } catch {
+      // ignore
+    }
 
-    tryLoadTrack(0);
     audioRef.current = audio;
     return audio;
-  }, [volume, isMusicPlaying]);
+  }, []);
 
-  // Apply volume changes
+  // Apply volume changes to the single audio instance
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = isMuted ? 0 : volume;
+    const audio = audioRef.current;
+    if (audio) {
+      audio.volume = isMuted ? 0 : volume;
     }
   }, [volume, isMuted]);
 
   const startMusic = useCallback(async () => {
-    if (isMusicPlaying) return;
+    // Prevent multiple simultaneous start attempts
+    if (hasStarted.current || isStartingRef.current) return;
+    isStartingRef.current = true;
     
     setIsLoading(true);
-    const audio = initAudio();
+    const audio = getAudio();
     
     try {
       await audio.play();
@@ -150,26 +141,30 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       hasStarted.current = true;
     } catch (e) {
       console.warn("Music autoplay blocked:", e);
+    } finally {
       setIsLoading(false);
+      isStartingRef.current = false;
     }
-  }, [isMusicPlaying, initAudio]);
+  }, [getAudio]);
 
   const stopMusic = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
+    const audio = audioRef.current;
+    if (audio) {
+      audio.pause();
       setIsMusicPlaying(false);
+      hasStarted.current = false;
     }
   }, []);
 
-  // Auto-start on first user interaction (including mouse move)
+  // Auto-start on first user interaction
   useEffect(() => {
-    if (hasStarted.current) return;
+    // Pre-initialize audio element
+    getAudio();
 
     const tryAutostart = () => {
-      if (!hasStarted.current) {
+      if (!hasStarted.current && !isStartingRef.current) {
         startMusic();
       }
-      cleanup();
     };
 
     const cleanup = () => {
@@ -181,7 +176,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       window.removeEventListener("scroll", tryAutostart);
     };
 
-    // Try autoplay immediately (works if user already interacted with domain)
+    // Try autoplay immediately
     startMusic();
 
     // Fallback: start on any interaction
@@ -193,13 +188,15 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     window.addEventListener("scroll", tryAutostart, { once: true, passive: true } as any);
 
     return cleanup;
-  }, [startMusic]);
+  }, [getAudio, startMusic]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
+      const audio = audioRef.current;
+      if (audio) {
+        audio.pause();
+        audio.src = "";
         audioRef.current = null;
       }
     };
