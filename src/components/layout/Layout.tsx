@@ -11,11 +11,11 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-background relative overflow-x-hidden">
       <CustomCursor />
       <ParticlesBackground />
       <Navbar />
-      <main className="relative z-10">{children}</main>
+      <main className="relative z-10 overflow-x-hidden">{children}</main>
       <Footer />
       <WhatsAppButton />
     </div>
