@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import logo from "@/assets/logo.png";
 
 interface LoadingScreenProps {
   onLoadingComplete: () => void;
   minDuration?: number;
 }
 
-export const LoadingScreen = ({ onLoadingComplete, minDuration = 3000 }: LoadingScreenProps) => {
+export const LoadingScreen = ({ onLoadingComplete, minDuration = 5000 }: LoadingScreenProps) => {
   const [progress, setProgress] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     const startTime = Date.now();
-    const maxDuration = 5000;
+    const maxDuration = 7000;
     
     // Simulate loading progress
     const progressInterval = setInterval(() => {
@@ -170,7 +171,7 @@ export const LoadingScreen = ({ onLoadingComplete, minDuration = 3000 }: Loading
                 ))}
               </motion.div>
 
-              {/* Center hexagon */}
+              {/* Center logo */}
               <motion.div
                 className="w-20 h-20 flex items-center justify-center"
                 animate={{
@@ -182,19 +183,19 @@ export const LoadingScreen = ({ onLoadingComplete, minDuration = 3000 }: Loading
                 }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                <motion.div
-                  className="text-4xl font-display font-bold text-primary"
+                <motion.img
+                  src={logo}
+                  alt="Vinny Artz Logo"
+                  className="w-16 h-16 object-contain"
                   animate={{ 
-                    textShadow: [
-                      '0 0 10px hsl(24 95% 53% / 0.5)',
-                      '0 0 30px hsl(24 95% 53% / 0.8)',
-                      '0 0 10px hsl(24 95% 53% / 0.5)',
+                    filter: [
+                      'drop-shadow(0 0 10px hsl(24 95% 53% / 0.5))',
+                      'drop-shadow(0 0 30px hsl(24 95% 53% / 0.8))',
+                      'drop-shadow(0 0 10px hsl(24 95% 53% / 0.5))',
                     ]
                   }}
                   transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  V
-                </motion.div>
+                />
               </motion.div>
             </motion.div>
 

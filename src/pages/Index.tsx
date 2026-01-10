@@ -584,7 +584,7 @@ const Index = () => {
               y: 0
             }} transition={{
               delay: 0.5
-            }} className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-lg mx-auto lg:mx-0 px-2 sm:px-0">
+            }} className="text-xs sm:text-sm md:text-base text-muted-foreground mb-5 sm:mb-6 lg:mb-8 max-w-lg mx-auto lg:mx-0 px-4 sm:px-2 lg:px-0 leading-relaxed">
                 {t('hero.description')}
               </motion.p>
 
@@ -596,14 +596,14 @@ const Index = () => {
               y: 0
             }} transition={{
               delay: 0.6
-            }} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-2 sm:px-0">
-                <NeonCtaButton href="https://wa.me/5594991022124" size="lg" className="w-full sm:w-auto">
-                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+            }} className="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:gap-4 justify-center lg:justify-start px-4 sm:px-2 lg:px-0">
+                <NeonCtaButton href="https://wa.me/5594991022124" size="lg" className="w-full sm:w-auto text-sm sm:text-base">
+                  <Sparkles className="w-4 h-4" />
                   {t('hero.cta')}
                 </NeonCtaButton>
-                <NeonCtaButton href="#portfolio" variant="outline" size="lg" className="w-full sm:w-auto">
+                <NeonCtaButton href="#portfolio" variant="outline" size="lg" className="w-full sm:w-auto text-sm sm:text-base">
                   {t('hero.portfolio')}
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <ArrowRight className="w-4 h-4" />
                 </NeonCtaButton>
               </motion.div>
             </motion.div>
@@ -617,11 +617,11 @@ const Index = () => {
           }} transition={{
             duration: 0.8,
             delay: 0.3
-          }} className="relative flex justify-center order-1 lg:order-2">
-              <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[380px] lg:max-w-md">
-                <div className="absolute inset-0 bg-primary/20 blur-[60px] sm:blur-[80px] rounded-full" />
+          }} className="relative flex justify-center order-1 lg:order-2 mb-6 lg:mb-0">
+              <div className="relative w-[200px] sm:w-[260px] md:w-[320px] lg:w-full lg:max-w-md mx-auto">
+                <div className="absolute inset-0 bg-primary/20 blur-[40px] sm:blur-[60px] lg:blur-[80px] rounded-full" />
                 
-                <div className="relative rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_40px_hsl(24_95%_53%/0.3)] sm:shadow-[0_0_60px_hsl(24_95%_53%/0.3)]">
+                <div className="relative rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_30px_hsl(24_95%_53%/0.3)] sm:shadow-[0_0_40px_hsl(24_95%_53%/0.3)] lg:shadow-[0_0_60px_hsl(24_95%_53%/0.3)]">
                   <img src={vinnyPhoto} alt="Vinny Artz" className="w-full object-cover" style={{
                   filter: "drop-shadow(0 0 30px hsl(24 95% 53% / 0.3))"
                 }} />
@@ -1225,11 +1225,11 @@ const Index = () => {
 
       {/* ========== CONTACT SECTION ========== */}
       <section id="contato" className="section-padding">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl">
           <SectionHeader badge={t('contact.badge')} title={t('contact.title')} subtitle={t('contact.subtitle')} />
 
-          <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
-            <div className="lg:col-span-2 space-y-6 sm:space-y-8">
+          <div className="grid lg:grid-cols-5 gap-6 sm:gap-8 lg:gap-12">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6 lg:space-y-8">
               <motion.div initial={{
               opacity: 0,
               x: -30
@@ -1325,12 +1325,12 @@ const Index = () => {
           }} viewport={{
             once: true
           }} className="lg:col-span-3">
-              <NeonCard>
-                <h3 className="font-display text-2xl font-bold mb-6">{t('contact.form.title')}</h3>
+              <NeonCard className="p-4 sm:p-6">
+                <h3 className="font-display text-lg sm:text-xl lg:text-2xl font-bold mb-4 sm:mb-6">{t('contact.form.title')}</h3>
                 <form 
                   action="https://formsubmit.co/vinnyfpamz@gmail.com" 
                   method="POST"
-                  className="space-y-6"
+                  className="space-y-4 sm:space-y-6"
                 >
                   {/* FormSubmit configuration */}
                   <input type="hidden" name="_subject" value="Nova mensagem do site Vinny Artz" />
@@ -1338,9 +1338,9 @@ const Index = () => {
                   <input type="hidden" name="_next" value={window.location.href} />
                   <input type="hidden" name="_template" value="table" />
                   
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
-                      <label className="block text-sm font-medium mb-2">{t('contact.form.name')} *</label>
+                      <label className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">{t('contact.form.name')} *</label>
                       <Input 
                         type="text" 
                         name="name"
@@ -1348,11 +1348,11 @@ const Index = () => {
                         value={formData.name} 
                         onChange={e => handleFormInputChange('name', e.target.value)}
                         required 
-                        className="bg-secondary/50" 
+                        className="bg-secondary/50 text-sm" 
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">{t('contact.form.email')} *</label>
+                      <label className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">{t('contact.form.email')} *</label>
                       <Input 
                         type="email" 
                         name="email"
@@ -1360,25 +1360,25 @@ const Index = () => {
                         value={formData.email} 
                         onChange={e => handleFormInputChange('email', e.target.value)}
                         required 
-                        className="bg-secondary/50" 
+                        className="bg-secondary/50 text-sm" 
                       />
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
-                      <label className="block text-sm font-medium mb-2">{t('contact.form.phone')}</label>
+                      <label className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">{t('contact.form.phone')}</label>
                       <Input 
                         type="tel" 
                         name="phone"
                         placeholder="(00) 00000-0000" 
                         value={formData.phone} 
                         onChange={e => handleFormInputChange('phone', e.target.value)}
-                        className="bg-secondary/50" 
+                        className="bg-secondary/50 text-sm" 
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">{t('contact.form.subject')} *</label>
+                      <label className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">{t('contact.form.subject')} *</label>
                       <Input 
                         type="text" 
                         name="subject"
@@ -1386,30 +1386,30 @@ const Index = () => {
                         value={formData.subject} 
                         onChange={e => handleFormInputChange('subject', e.target.value)}
                         required 
-                        className="bg-secondary/50" 
+                        className="bg-secondary/50 text-sm" 
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">{t('contact.form.message')} *</label>
+                    <label className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">{t('contact.form.message')} *</label>
                     <Textarea 
                       name="message"
                       placeholder={t('contact.form.messagePlaceholder')} 
                       value={formData.message} 
                       onChange={e => handleFormInputChange('message', e.target.value)}
                       required 
-                      rows={6} 
-                      className="bg-secondary/50 resize-none" 
+                      rows={4} 
+                      className="bg-secondary/50 resize-none text-sm sm:rows-6" 
                     />
                   </div>
 
-                  <NeonCtaButton type="submit" size="lg" className="w-full">
-                    <Send className="w-5 h-5" />
+                  <NeonCtaButton type="submit" size="lg" className="w-full text-sm sm:text-base">
+                    <Send className="w-4 h-4 sm:w-5 sm:h-5" />
                     {t('contact.form.submit')}
                   </NeonCtaButton>
 
-                  <p className="text-xs text-center text-muted-foreground">
+                  <p className="text-[10px] sm:text-xs text-center text-muted-foreground">
                     <CheckCircle className="w-3 h-3 inline mr-1" />
                     {t('contact.form.response')}
                   </p>
