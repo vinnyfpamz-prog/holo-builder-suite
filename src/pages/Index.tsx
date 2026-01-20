@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { ArrowRight, Palette, Video, Globe, Printer, FileText, Sparkles, Star, ChevronRight, User, Target, Heart, Lightbulb, Rocket, CheckCircle, Zap, Code, Image, Share2, Megaphone, PenTool, Monitor, Smartphone, Film, Layout, Search, FileCheck, FolderOpen, ExternalLink, Filter, Quote, ChevronLeft, MessageCircle, Instagram, Mail, MapPin, Phone, Send, Clock, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NeonCtaButton } from "@/components/ui/neon-cta-button";
@@ -14,6 +14,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { FullscreenModal } from "@/components/ui/fullscreen-modal";
 import { useAudio } from "@/contexts/AudioContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
+import { LazySection } from "@/components/ui/lazy-section";
 import logo from "@/assets/logo.png";
 import vinnyPhoto from "@/assets/vinny-photo.png";
 import testimonialMale1 from "@/assets/testimonial-male-1.jpg";
@@ -401,7 +403,6 @@ const Index = () => {
   const { t } = useLanguage();
   const [activeServiceTab, setActiveServiceTab] = useState("digital");
   const [activePortfolioCategory, setActivePortfolioCategory] = useState("all");
-  const [hoveredPortfolioItem, setHoveredPortfolioItem] = useState<string | null>(null);
   const [currentTestimonialSlide, setCurrentTestimonialSlide] = useState(0);
   const [formData, setFormData] = useState({
     name: "",
@@ -430,13 +431,13 @@ const Index = () => {
     title: string;
   }>({ isOpen: false, type: 'image', src: '', title: '' });
   
-  const openFullscreen = (type: 'image' | 'video', src: string, title: string) => {
+  const openFullscreen = useCallback((type: 'image' | 'video', src: string, title: string) => {
     setFullscreenModal({ isOpen: true, type, src, title });
     playClickSound();
     if (type === 'video') {
       lowerVolumeTemporarily();
     }
-  };
+  }, [playClickSound, lowerVolumeTemporarily]);
   
   const closeFullscreen = () => {
     setFullscreenModal({ ...fullscreenModal, isOpen: false });
@@ -969,7 +970,7 @@ const Index = () => {
 
           {isLoadingPortfolio ? (
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-              {[1, 2, 3].map(i => (
+              {[1, 2, 3, 4, 5, 6].map(i => (
                 <div key={i} className="aspect-[4/3] rounded-lg sm:rounded-xl bg-secondary animate-pulse" />
               ))}
             </div>
@@ -978,77 +979,14 @@ const Index = () => {
               <p className="text-muted-foreground">{t('portfolio.empty')}</p>
             </div>
           ) : (
-            <motion.div layout className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-              {filteredPortfolioItems.map((item, index) => (
-                <motion.div 
-                  key={item.id} 
-                  layout 
-                  initial={{ opacity: 0, scale: 0.9 }} 
-                  animate={{ opacity: 1, scale: 1 }} 
-                  exit={{ opacity: 0, scale: 0.9 }} 
-                  transition={{ delay: index * 0.1 }} 
-                  className="group relative aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden cursor-pointer border-2 border-primary/30 hover:border-primary shadow-[0_0_15px_hsl(24_95%_53%/0.15)] hover:shadow-[0_0_30px_hsl(24_95%_53%/0.3)] transition-all duration-300" 
-                  onMouseEnter={() => setHoveredPortfolioItem(item.id)} 
-                  onMouseLeave={() => setHoveredPortfolioItem(null)}
-                  onClick={() => {
-                    if (!item.external_link) {
-                      if (item.video_url) {
-                        openFullscreen('video', item.video_url, item.title);
-                      } else if (item.image_url) {
-                        openFullscreen('image', item.image_url, item.title);
-                      }
-                    }
-                  }}
-                >
-                  {item.video_url ? (
-                    <video 
-                      src={item.video_url}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      muted
-                      loop
-                      playsInline
-                      onMouseEnter={(e) => e.currentTarget.play()}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.pause();
-                        e.currentTarget.currentTime = 0;
-                      }}
-                    />
-                  ) : (
-                    <img 
-                      src={item.image_url || 'https://images.unsplash.com/photo-1634942537034-2531766767d1?w=800&h=600&fit=crop'} 
-                      alt={item.title} 
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-                  {item.video_url && (
-                    <div className="absolute top-2 right-2 px-2 py-1 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-sm">
-                      <Play className="w-3 h-3 text-primary" />
-                    </div>
-                  )}
-                  <div className="absolute inset-0 p-3 sm:p-6 flex flex-col justify-end">
-                    <span className="text-[10px] sm:text-xs font-display uppercase tracking-wider text-primary mb-1 sm:mb-2">
-                      {portfolioCategories.find(c => c.slug === item.category_slug)?.name || 'Projeto'}
-                    </span>
-                    <h3 className="font-display text-sm sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1">{item.title}</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 line-clamp-2">{item.description}</p>
-                    {item.external_link ? (
-                      <a href={item.external_link} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                        <Button variant="hero" size="sm" className="w-full text-xs flex items-center justify-center gap-1.5">
-                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-                          {t('portfolio.view')}
-                        </Button>
-                      </a>
-                    ) : (
-                      <Button variant="hero" size="sm" className="w-full text-xs flex items-center justify-center gap-1.5">
-                        <Play className="w-3 h-3 sm:w-4 sm:h-4" />
-                        Ver Tela Cheia
-                      </Button>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
+            <PortfolioGrid
+              items={filteredPortfolioItems}
+              categories={portfolioCategories}
+              activeCategory={activePortfolioCategory}
+              onOpenFullscreen={openFullscreen}
+              initialItemsToShow={6}
+              loadMoreIncrement={6}
+            />
           )}
 
           <motion.div initial={{
