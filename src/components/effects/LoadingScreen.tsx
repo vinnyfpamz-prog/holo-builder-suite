@@ -1,19 +1,45 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.png";
+import vinnyPhoto from "@/assets/vinny-photo.png";
 
 interface LoadingScreenProps {
   onLoadingComplete: () => void;
   minDuration?: number;
 }
 
+// Preload critical assets during loading screen
+const preloadAssets = (): Promise<void[]> => {
+  const criticalImages = [
+    logo,
+    vinnyPhoto,
+  ];
+  
+  return Promise.all(
+    criticalImages.map(src => 
+      new Promise<void>((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve();
+        img.onerror = () => resolve(); // Don't block on error
+        img.src = src;
+      })
+    )
+  );
+};
+
 export const LoadingScreen = ({ onLoadingComplete, minDuration = 5000 }: LoadingScreenProps) => {
   const [progress, setProgress] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const assetsLoadedRef = useRef(false);
 
   useEffect(() => {
     const startTime = Date.now();
     const maxDuration = 7000;
+    
+    // Start preloading assets immediately
+    preloadAssets().then(() => {
+      assetsLoadedRef.current = true;
+    });
     
     // Simulate loading progress
     const progressInterval = setInterval(() => {
@@ -22,16 +48,16 @@ export const LoadingScreen = ({ onLoadingComplete, minDuration = 5000 }: Loading
       
       // Add some randomness for realistic feel
       setProgress(prev => {
-        const increment = Math.random() * 15 + 5;
-        const newProgress = Math.min(prev + increment, naturalProgress + 20, 100);
+        const increment = Math.random() * 12 + 3;
+        const newProgress = Math.min(prev + increment, naturalProgress + 15, 100);
         return newProgress;
       });
-    }, 150);
+    }, 180);
 
-    // Check if page is ready
+    // Check if page and assets are ready
     const checkReady = () => {
       const elapsed = Date.now() - startTime;
-      if (document.readyState === 'complete' && elapsed >= minDuration) {
+      if (document.readyState === 'complete' && assetsLoadedRef.current && elapsed >= minDuration) {
         setProgress(100);
         setTimeout(() => {
           setIsExiting(true);
