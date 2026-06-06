@@ -83,9 +83,9 @@ export const PortfolioGrid = memo(({
               onClick={() => {
                 if (!item.external_link) {
                   if (item.video_url) {
-                    onOpenFullscreen('video', item.video_url, item.title);
+                    onOpenFullscreen('video', item.video_url, translateContent(item.title, language));
                   } else if (item.image_url) {
-                    onOpenFullscreen('image', item.image_url, item.title);
+                    onOpenFullscreen('image', item.image_url, translateContent(item.title, language));
                   }
                 }
               }}
