@@ -16,6 +16,7 @@ import { useAudio } from "@/contexts/AudioContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { LazySection } from "@/components/ui/lazy-section";
+import { translateContent } from "@/lib/contentTranslation";
 import logo from "@/assets/logo.png";
 import vinnyPhoto from "@/assets/vinny-photo.png";
 import testimonialMale1 from "@/assets/testimonial-male-1.jpg";
@@ -400,7 +401,7 @@ const businessHours = [{
 const Index = () => {
   const { toast } = useToast();
   const { playClickSound, playHoverSound, playSuccessSound, lowerVolumeTemporarily, restoreVolume } = useAudio();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeServiceTab, setActiveServiceTab] = useState("digital");
   const [activePortfolioCategory, setActivePortfolioCategory] = useState("all");
   const [currentTestimonialSlide, setCurrentTestimonialSlide] = useState(0);
@@ -851,8 +852,8 @@ const Index = () => {
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-2 sm:mb-4 mx-auto">
                     <service.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                   </div>
-                  <h3 className="font-display text-xs sm:text-lg font-semibold mb-1 sm:mb-2">{service.title}</h3>
-                  <p className="text-[10px] sm:text-sm text-muted-foreground line-clamp-2 sm:line-clamp-none">{service.description}</p>
+                   <h3 className="font-display text-xs sm:text-lg font-semibold mb-1 sm:mb-2">{translateContent(service.title, language)}</h3>
+                   <p className="text-[10px] sm:text-sm text-muted-foreground line-clamp-2 sm:line-clamp-none">{translateContent(service.description, language)}</p>
                 </NeonCard>
               </motion.div>)}
           </div>
@@ -862,7 +863,7 @@ const Index = () => {
             <TabsList className="flex flex-wrap justify-center gap-1.5 sm:gap-2 bg-transparent h-auto mb-6 sm:mb-8 px-2">
               {serviceCategories.map(category => <TabsTrigger key={category.id} value={category.id} className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg font-display text-[10px] sm:text-xs uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:bg-card data-[state=inactive]:border data-[state=inactive]:border-border data-[state=inactive]:hover:border-primary/50 transition-all">
                   <category.icon className="w-3 h-3 sm:w-4 sm:h-4" />
-                  <span className="hidden xs:inline sm:inline">{category.title}</span>
+                  <span className="hidden xs:inline sm:inline">{translateContent(category.title, language)}</span>
                 </TabsTrigger>)}
             </TabsList>
 
@@ -877,8 +878,8 @@ const Index = () => {
               duration: 0.4
             }}>
                   <div className="text-center mb-6 sm:mb-8">
-                    <h3 className="font-display text-xl sm:text-2xl font-bold mb-1 sm:mb-2">{category.title}</h3>
-                    <p className="text-sm sm:text-base text-muted-foreground">{category.description}</p>
+                   <h3 className="font-display text-xl sm:text-2xl font-bold mb-1 sm:mb-2">{translateContent(category.title, language)}</h3>
+                   <p className="text-sm sm:text-base text-muted-foreground">{translateContent(category.description, language)}</p>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
                     {category.items.map((item, index) => <motion.div key={item.title} initial={{
@@ -896,12 +897,12 @@ const Index = () => {
                               <item.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="font-display text-base sm:text-lg font-semibold mb-1 sm:mb-2">{item.title}</h4>
-                              <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">{item.description}</p>
+                             <h4 className="font-display text-base sm:text-lg font-semibold mb-1 sm:mb-2">{translateContent(item.title, language)}</h4>
+                             <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">{translateContent(item.description, language)}</p>
                               <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                                {item.features.map(feature => <span key={feature} className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs rounded-full bg-secondary text-muted-foreground">
+                                 {item.features.map(feature => <span key={feature} className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs rounded-full bg-secondary text-muted-foreground">
                                     <CheckCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-primary flex-shrink-0" />
-                                    <span className="truncate">{feature}</span>
+                                    <span className="truncate">{translateContent(feature, language)}</span>
                                   </span>)}
                               </div>
                             </div>
