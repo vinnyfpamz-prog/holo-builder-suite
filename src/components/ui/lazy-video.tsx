@@ -47,7 +47,6 @@ export const LazyVideo = memo(({
   useEffect(() => {
     if (isInViewport && !canHover && !shouldLoadVideo) {
       setShouldLoadVideo(true);
-      setShowPoster(false);
     }
   }, [isInViewport, canHover, shouldLoadVideo]);
 
