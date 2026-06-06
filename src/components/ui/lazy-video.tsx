@@ -34,13 +34,22 @@ export const LazyVideo = memo(({
   
   const [containerRef, isInViewport] = useInViewport<HTMLDivElement>({ 
     threshold: 0.1,
-    rootMargin: '120px',
+    rootMargin: '200px',
     triggerOnce: false 
   });
 
   useEffect(() => {
     setCanHover(window.matchMedia('(hover: hover) and (pointer: fine)').matches);
   }, []);
+
+  // On touch devices (no hover), load the video metadata when it enters viewport
+  // so the first frame appears as a poster — but don't autoplay.
+  useEffect(() => {
+    if (isInViewport && !canHover && !shouldLoadVideo) {
+      setShouldLoadVideo(true);
+      setShowPoster(false);
+    }
+  }, [isInViewport, canHover, shouldLoadVideo]);
 
   // Pause video when out of viewport to save resources
   useEffect(() => {
@@ -138,6 +147,7 @@ export const LazyVideo = memo(({
           playsInline
           preload="metadata"
           onLoadedData={handleLoadedData}
+          onLoadedMetadata={() => setIsLoaded(true)}
         />
       )}
     </div>

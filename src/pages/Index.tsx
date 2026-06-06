@@ -401,7 +401,7 @@ const businessHours = [{
 const Index = () => {
   const { toast } = useToast();
   const { playClickSound, playHoverSound, playSuccessSound, lowerVolumeTemporarily, restoreVolume } = useAudio();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeServiceTab, setActiveServiceTab] = useState("digital");
   const [activePortfolioCategory, setActivePortfolioCategory] = useState("all");
   const [currentTestimonialSlide, setCurrentTestimonialSlide] = useState(0);
