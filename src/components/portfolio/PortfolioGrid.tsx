@@ -1,10 +1,11 @@
-import { useState, useMemo, memo } from 'react';
+import { useState, useMemo, memo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, ExternalLink, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LazyVideo } from '@/components/ui/lazy-video';
 import { LazyImage } from '@/components/ui/lazy-image';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { translateCategoryName, translateContent } from '@/lib/contentTranslation';
 
 type PortfolioItem = {
   id: string;
@@ -40,12 +41,11 @@ export const PortfolioGrid = memo(({
   initialItemsToShow = 6,
   loadMoreIncrement = 6
 }: PortfolioGridProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [visibleCount, setVisibleCount] = useState(initialItemsToShow);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
-  // Reset visible count when category changes
-  useMemo(() => {
+  useEffect(() => {
     setVisibleCount(initialItemsToShow);
   }, [activeCategory, initialItemsToShow]);
 
@@ -61,7 +61,8 @@ export const PortfolioGrid = memo(({
   };
 
   const getCategoryName = (slug: string | null) => {
-    return categories.find(c => c.slug === slug)?.name || 'Projeto';
+    const category = categories.find(c => c.slug === slug);
+    return translateCategoryName(category?.name, slug, language);
   };
 
   return (
@@ -82,9 +83,9 @@ export const PortfolioGrid = memo(({
               onClick={() => {
                 if (!item.external_link) {
                   if (item.video_url) {
-                    onOpenFullscreen('video', item.video_url, item.title);
+                    onOpenFullscreen('video', item.video_url, translateContent(item.title, language));
                   } else if (item.image_url) {
-                    onOpenFullscreen('image', item.image_url, item.title);
+                    onOpenFullscreen('image', item.image_url, translateContent(item.title, language));
                   }
                 }
               }}
@@ -121,10 +122,10 @@ export const PortfolioGrid = memo(({
                   {getCategoryName(item.category_slug)}
                 </span>
                 <h3 className="font-display text-sm sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1">
-                  {item.title}
+                  {translateContent(item.title, language)}
                 </h3>
                 <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 line-clamp-2">
-                  {item.description}
+                  {translateContent(item.description, language)}
                 </p>
                 {item.external_link ? (
                   <a 
@@ -141,7 +142,7 @@ export const PortfolioGrid = memo(({
                 ) : (
                   <Button variant="hero" size="sm" className="w-full text-xs flex items-center justify-center gap-1.5">
                     <Play className="w-3 h-3 sm:w-4 sm:h-4" />
-                    Ver Tela Cheia
+                    {translateContent('Ver Tela Cheia', language)}
                   </Button>
                 )}
               </div>
@@ -163,7 +164,7 @@ export const PortfolioGrid = memo(({
             onClick={handleLoadMore}
             className="group flex items-center gap-2 px-6 py-3 border-primary/30 hover:border-primary hover:bg-primary/5 transition-all"
           >
-            <span>Carregar mais</span>
+            <span>{translateContent('Carregar mais', language)}</span>
             <span className="text-primary">({remainingCount})</span>
             <ChevronDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
           </Button>

@@ -23,24 +23,19 @@ const App = () => {
       <TooltipProvider>
         <LanguageProvider>
           <AudioProvider>
-            {isLoading ? (
-              <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
-            ) : (
-              <>
-                <Toaster />
-                <Sonner />
-                <BrowserRouter>
-                  <Layout>
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </Layout>
-                </BrowserRouter>
-                <LanguagePopup />
-                <AudioControls />
-              </>
-            )}
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Layout>
+            </BrowserRouter>
+            <LanguagePopup />
+            <AudioControls />
+            {isLoading && <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />}
           </AudioProvider>
         </LanguageProvider>
       </TooltipProvider>

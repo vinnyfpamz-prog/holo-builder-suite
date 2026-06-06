@@ -26,7 +26,7 @@ export const LazyImage = memo(({
   const [hasError, setHasError] = useState(false);
 
   return (
-    <div ref={ref} className={cn('relative overflow-hidden', containerClassName)}>
+    <div ref={ref} className={cn('relative overflow-hidden w-full h-full', containerClassName)}>
       {/* Placeholder */}
       {!isLoaded && (
         <div 
