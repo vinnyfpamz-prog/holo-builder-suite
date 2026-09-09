@@ -18,7 +18,7 @@ import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { LazySection } from "@/components/ui/lazy-section";
 import { translateContent } from "@/lib/contentTranslation";
 import logo from "@/assets/logo.png";
-import vinnyPhoto from "@/assets/vinny-photo.png";
+import vinnyPhoto from "@/assets/vinny-photo-new.jpg";
 import testimonialMale1 from "@/assets/testimonial-male-1.jpg";
 import testimonialFemale1 from "@/assets/testimonial-female-1.png";
 import testimonialFemale2 from "@/assets/testimonial-female-2.jpg";
