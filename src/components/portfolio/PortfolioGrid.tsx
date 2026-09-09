@@ -67,7 +67,7 @@ export const PortfolioGrid = memo(({
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      <motion.div layout className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+      <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         <AnimatePresence mode="popLayout">
           {visibleItems.map((item, index) => (
             <motion.div 
@@ -77,7 +77,7 @@ export const PortfolioGrid = memo(({
               animate={{ opacity: 1, scale: 1 }} 
               exit={{ opacity: 0, scale: 0.9 }} 
               transition={{ delay: Math.min(index * 0.05, 0.3) }} 
-              className="group relative aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden cursor-pointer border-2 border-primary/30 hover:border-primary shadow-[0_0_15px_hsl(24_95%_53%/0.15)] hover:shadow-[0_0_30px_hsl(24_95%_53%/0.3)] transition-all duration-300" 
+              className="group relative aspect-[4/5] sm:aspect-[4/5] xl:aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden cursor-pointer border-2 border-primary/30 hover:border-primary shadow-[0_0_20px_hsl(24_95%_53%/0.15)] hover:shadow-[0_0_45px_hsl(24_95%_53%/0.35)] transition-all duration-300" 
               onMouseEnter={() => setHoveredItem(item.id)} 
               onMouseLeave={() => setHoveredItem(null)}
               onClick={() => {
@@ -106,8 +106,8 @@ export const PortfolioGrid = memo(({
                 />
               )}
               
-              {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+              {/* Gradient overlay - lighter so the artwork stays visible */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/25 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
               
               {/* Video indicator */}
               {item.video_url && (
@@ -117,16 +117,17 @@ export const PortfolioGrid = memo(({
               )}
               
               {/* Content */}
-              <div className="absolute inset-0 p-3 sm:p-6 flex flex-col justify-end">
+              <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 flex flex-col justify-end">
                 <span className="text-[10px] sm:text-xs font-display uppercase tracking-wider text-primary mb-1 sm:mb-2">
                   {getCategoryName(item.category_slug)}
                 </span>
-                <h3 className="font-display text-sm sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1">
+                <h3 className="font-display text-base sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1">
                   {translateContent(item.title, language)}
                 </h3>
                 <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 line-clamp-2">
                   {translateContent(item.description, language)}
                 </p>
+
                 {item.external_link ? (
                   <a 
                     href={item.external_link} 
